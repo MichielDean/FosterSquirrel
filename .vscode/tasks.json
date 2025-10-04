@@ -1,0 +1,151 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Clean Build",
+            "type": "shell",
+            "command": "flutter",
+            "args": ["clean"],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "clear": true
+            },
+            "problemMatcher": [],
+            "dependsOrder": "sequence",
+            "dependsOn": ["Install Dependencies"],
+            "detail": "Clean build cache and reinstall dependencies"
+        },
+        {
+            "label": "Install Dependencies",
+            "type": "shell",
+            "command": "flutter",
+            "args": ["pub", "get"],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "clear": true
+            },
+            "problemMatcher": [],
+            "detail": "Install/update Flutter dependencies"
+        },
+        {
+            "label": "Release APK",
+            "type": "shell",
+            "command": "flutter",
+            "args": ["build", "apk", "--release"],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "clear": true
+            },
+            "problemMatcher": [],
+            "detail": "Build release APK for distribution"
+        },
+        {
+            "label": "Run Tests",
+            "type": "shell",
+            "command": "flutter",
+            "args": ["test"],
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "clear": true
+            },
+            "problemMatcher": [],
+            "detail": "Run all unit and widget tests"
+        },
+        {
+            "label": "Analyze Code",
+            "type": "shell",
+            "command": "flutter",
+            "args": ["analyze"],
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "clear": true
+            },
+            "problemMatcher": [],
+            "detail": "Check for code issues and linting problems"
+        },
+        {
+            "label": "Format Code",
+            "type": "shell",
+            "command": "dart",
+            "args": ["format", "lib/", "test/"],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "clear": true
+            },
+            "problemMatcher": [],
+            "detail": "Format all Dart code files"
+        },
+        {
+            "label": "Regenerate Icons",
+            "type": "shell",
+            "command": "pwsh",
+            "args": [
+                "-Command",
+                "dart run flutter_launcher_icons"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "clear": true
+            },
+            "problemMatcher": [],
+            "detail": "Regenerate app icons and splash screens from source images"
+        },
+        {
+            "label": "Deploy",
+                "type": "shell",
+                "command": "pwsh",
+                "args": [
+                    "-File",
+                    "scripts/deploy.ps1"
+                ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "dedicated",
+                "clear": true
+            },
+            "problemMatcher": [],
+            "detail": "Deploy after assets and clean build"
+        },
+        {
+            "label": "Complete Rebuild & Deploy",
+            "type": "process",
+            "command": "echo",
+            "args": ["Complete Rebuild & Deploy"],
+            "dependsOrder": "sequence",
+            "dependsOn": ["Format Code", "Regenerate Icons", "Clean Build", "Deploy"],
+            "group": "build",
+            "detail": "Complete asset regeneration, clean build, and deploy - does EVERYTHING"
+        }
+    ]
+}

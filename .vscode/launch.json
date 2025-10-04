@@ -1,0 +1,38 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "🚀 FosterSquirrel (Quick Start)",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+            "deviceId": "emulator-5554",
+            "preLaunchTask": "🔍 Check Devices"
+        },
+        {
+            "name": "🎯 FosterSquirrel (Profile Mode)",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+            "deviceId": "emulator-5554",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "🔄 FosterSquirrel (Any Device)",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart"
+        },
+        {
+            "name": "🏗️ FosterSquirrel (Clean Deploy)",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+            "deviceId": "emulator-5554",
+            "preLaunchTask": "🏗️ Clean Build"
+        }
+    ]
+}
