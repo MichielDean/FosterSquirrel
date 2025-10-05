@@ -21,9 +21,9 @@ void main() {
     squirrelRepo = SquirrelRepository(database);
   });
 
-  tearDown() async {
+  tearDown(() async {
     await TestDatabaseHelper.closeDatabase(database);
-  }
+  });
 
   group('FeedingRepository - Add Feeding Record', () {
     test('should add feeding record successfully', () async {

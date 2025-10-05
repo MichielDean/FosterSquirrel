@@ -127,6 +127,7 @@ class _FeedingRecordFormState extends State<FeedingRecordForm> {
         ),
         actions: [
           TextButton(
+            key: const Key('save_button'),
             onPressed: _saveFeedingRecord,
             style: TextButton.styleFrom(
               backgroundColor: Colors.white.withValues(alpha: 0.2),
@@ -189,6 +190,7 @@ class _FeedingRecordFormState extends State<FeedingRecordForm> {
 
   Widget _buildStartingWeightField() {
     return TextFormField(
+      key: const Key('starting_weight_field'),
       controller: _startingWeightController,
       decoration: const InputDecoration(
         labelText: 'Pre-Feeding Weight (grams) *',
@@ -259,6 +261,7 @@ class _FeedingRecordFormState extends State<FeedingRecordForm> {
 
   Widget _buildActualFeedAmountField() {
     return TextFormField(
+      key: const Key('actual_feed_amount_field'),
       controller: _actualFeedAmountController,
       decoration: const InputDecoration(
         labelText: 'Actual Amount Fed (mL)',
@@ -289,6 +292,7 @@ class _FeedingRecordFormState extends State<FeedingRecordForm> {
 
   Widget _buildEndingWeightField() {
     return TextFormField(
+      key: const Key('ending_weight_field'),
       controller: _endingWeightController,
       decoration: const InputDecoration(
         labelText: 'Post-Feeding Weight (grams)',
@@ -351,6 +355,7 @@ class _FeedingRecordFormState extends State<FeedingRecordForm> {
 
   Widget _buildNotesField() {
     return TextFormField(
+      key: const Key('notes_field'),
       controller: _notesController,
       decoration: const InputDecoration(
         labelText: 'Notes',
@@ -379,6 +384,7 @@ class _FeedingRecordFormState extends State<FeedingRecordForm> {
         const SizedBox(width: 16),
         Expanded(
           child: ElevatedButton(
+            key: const Key('save_button'),
             onPressed: _saveFeedingRecord,
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),

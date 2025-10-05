@@ -8,6 +8,7 @@ import '../utils/performance_monitor.dart';
 // Export the new optimized providers
 export 'squirrel_list_provider.dart';
 export 'feeding_list_provider.dart';
+export 'care_note_list_provider.dart';
 
 /// Provider for managing squirrel data with proper async patterns.
 ///

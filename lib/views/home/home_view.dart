@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../models/models.dart';
@@ -19,13 +20,15 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  Timer? _loadTimer;
+
   @override
   void initState() {
     super.initState();
     // PERFORMANCE: Load data AFTER UI is fully settled
     // Increased delay to 800ms to let splash screen transition complete
     // and give the main thread time to process the provider tree
-    Future.delayed(const Duration(milliseconds: 800), () {
+    _loadTimer = Timer(const Duration(milliseconds: 800), () {
       if (!mounted) return;
 
       final provider = Provider.of<SquirrelListProvider>(
@@ -37,6 +40,12 @@ class _HomeViewState extends State<HomeView> {
         provider.loadSquirrels();
       }
     });
+  }
+
+  @override
+  void dispose() {
+    _loadTimer?.cancel();
+    super.dispose();
   }
 
   Future<void> _addSquirrel(BuildContext context) async {
@@ -66,6 +75,95 @@ class _HomeViewState extends State<HomeView> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Failed to add squirrel: $e'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    }
+  }
+
+  Future<void> _editSquirrel(BuildContext context, Squirrel squirrel) async {
+    final result = await Navigator.of(context).push<Squirrel>(
+      MaterialPageRoute(
+        builder: (context) => SquirrelFormPage(squirrel: squirrel),
+      ),
+    );
+
+    if (result != null && context.mounted) {
+      final provider = Provider.of<SquirrelListProvider>(
+        context,
+        listen: false,
+      );
+
+      try {
+        await provider.updateSquirrel(result);
+
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Updated ${result.name} successfully!'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+      } catch (e) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed to update squirrel: $e'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    }
+  }
+
+  Future<void> _deleteSquirrel(BuildContext context, Squirrel squirrel) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Squirrel'),
+        content: Text(
+          'Are you sure you want to delete ${squirrel.name}? This will also delete all feeding records and care notes for this squirrel.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && context.mounted) {
+      final provider = Provider.of<SquirrelListProvider>(
+        context,
+        listen: false,
+      );
+
+      try {
+        await provider.deleteSquirrel(squirrel.id);
+
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Deleted ${squirrel.name} successfully'),
+              backgroundColor: Colors.orange,
+            ),
+          );
+        }
+      } catch (e) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed to delete squirrel: $e'),
               backgroundColor: Colors.red,
             ),
           );
@@ -156,6 +254,8 @@ class _HomeViewState extends State<HomeView> {
         return SquirrelCard(
           squirrel: squirrel,
           onTap: () => _navigateToSquirrelDetail(context, squirrel),
+          onEdit: () => _editSquirrel(context, squirrel),
+          onDelete: () => _deleteSquirrel(context, squirrel),
         );
       },
     );
@@ -174,8 +274,16 @@ class _HomeViewState extends State<HomeView> {
 class SquirrelCard extends StatelessWidget {
   final Squirrel squirrel;
   final VoidCallback onTap;
+  final VoidCallback onEdit;
+  final VoidCallback onDelete;
 
-  const SquirrelCard({super.key, required this.squirrel, required this.onTap});
+  const SquirrelCard({
+    super.key,
+    required this.squirrel,
+    required this.onTap,
+    required this.onEdit,
+    required this.onDelete,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -219,6 +327,37 @@ class SquirrelCard extends StatelessWidget {
                     ),
                   ),
                   _buildStatusChip(context, currentStage),
+                  PopupMenuButton<String>(
+                    onSelected: (value) {
+                      if (value == 'edit') {
+                        onEdit();
+                      } else if (value == 'delete') {
+                        onDelete();
+                      }
+                    },
+                    itemBuilder: (context) => [
+                      const PopupMenuItem(
+                        value: 'edit',
+                        child: Row(
+                          children: [
+                            Icon(Icons.edit, size: 20),
+                            SizedBox(width: 8),
+                            Text('Edit'),
+                          ],
+                        ),
+                      ),
+                      const PopupMenuItem(
+                        value: 'delete',
+                        child: Row(
+                          children: [
+                            Icon(Icons.delete, size: 20, color: Colors.red),
+                            SizedBox(width: 8),
+                            Text('Delete', style: TextStyle(color: Colors.red)),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
               const SizedBox(height: 12),

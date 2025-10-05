@@ -2,6 +2,10 @@
 applyTo: '**'
 ---
 
+## 🚨 CRITICAL FILE MANAGEMENT RULES 🚨
+
+**NEVER EVER create summary, status, progress, or completion documents.** This is an absolute prohibition. See detailed rules in "Code Quality and File Management Standards" section below.
+
 ## Context7 Usage Requirements - MANDATORY
 
 **🚨 CRITICAL: You are trained on OLD data. Libraries update constantly. You MUST use Context7 to verify current APIs, options, and patterns. 🚨**

@@ -21,9 +21,9 @@ void main() {
     squirrelRepo = SquirrelRepository(database);
   });
 
-  tearDown() async {
+  tearDown(() async {
     await TestDatabaseHelper.closeDatabase(database);
-  }
+  });
 
   group('CareNoteRepository - Add Care Note', () {
     test('should add care note successfully', () async {

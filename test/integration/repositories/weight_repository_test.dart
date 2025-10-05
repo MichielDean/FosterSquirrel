@@ -24,9 +24,9 @@ void main() {
     squirrelRepo = SquirrelRepository(database);
   });
 
-  tearDown() async {
+  tearDown(() async {
     await TestDatabaseHelper.closeDatabase(database);
-  }
+  });
 
   group('WeightRepository - Get Weight Trend Data', () {
     test('should get weight trend from feeding records', () async {

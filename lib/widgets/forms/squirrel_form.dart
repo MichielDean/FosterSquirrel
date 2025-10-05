@@ -87,6 +87,7 @@ class _SquirrelFormPageState extends State<SquirrelFormPage> {
         ),
         actions: [
           TextButton(
+            key: const Key('save_button'),
             onPressed: _saveSquirrel,
             style: TextButton.styleFrom(
               backgroundColor: Colors.white.withValues(alpha: 0.2),
@@ -130,6 +131,7 @@ class _SquirrelFormPageState extends State<SquirrelFormPage> {
 
   Widget _buildNameField() {
     return TextFormField(
+      key: const Key('name_field'),
       controller: _nameController,
       decoration: const InputDecoration(
         labelText: 'Name *',
@@ -149,6 +151,7 @@ class _SquirrelFormPageState extends State<SquirrelFormPage> {
 
   Widget _buildFoundDateField() {
     return InkWell(
+      key: const Key('found_date_field'),
       onTap: _selectFoundDate,
       child: InputDecorator(
         decoration: const InputDecoration(
@@ -166,6 +169,7 @@ class _SquirrelFormPageState extends State<SquirrelFormPage> {
       children: [
         Expanded(
           child: DropdownButtonFormField<DevelopmentStage>(
+            key: const Key('development_stage_dropdown'),
             initialValue: _developmentStage,
             isExpanded: true,
             decoration: const InputDecoration(
@@ -195,6 +199,7 @@ class _SquirrelFormPageState extends State<SquirrelFormPage> {
 
   Widget _buildWeightField() {
     return TextFormField(
+      key: const Key('weight_field'),
       controller: _weightController,
       decoration: const InputDecoration(
         labelText: 'Initial Weight (grams) *',
@@ -225,6 +230,7 @@ class _SquirrelFormPageState extends State<SquirrelFormPage> {
 
   Widget _buildNotesField() {
     return TextFormField(
+      key: const Key('notes_field'),
       controller: _notesController,
       decoration: const InputDecoration(
         labelText: 'Notes',
