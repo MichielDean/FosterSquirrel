@@ -190,10 +190,39 @@ void main() {
     testWidgets('should allow saving with only name (weight optional)', (
       tester,
     ) async {
-      // Arrange
+      // Set larger viewport to accommodate full form
+      tester.view.physicalSize = const Size(1080, 1920);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+      
+      // Arrange - Use Scaffold with Navigator so pop() works
       await tester.pumpWidget(
-        buildAppWithProviders(home: const SquirrelFormPage()),
+        buildAppWithProviders(
+          home: Scaffold(
+            body: Builder(
+              builder: (context) => Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const SquirrelFormPage(),
+                      ),
+                    );
+                  },
+                  child: const Text('Open Form'),
+                ),
+              ),
+            ),
+          ),
+        ),
       );
+      await tester.pumpAndSettle();
+      
+      // Navigate to form
+      await tester.tap(find.text('Open Form'));
       await tester.pumpAndSettle();
 
       // Act - Save with only name
@@ -201,10 +230,23 @@ void main() {
         find.byKey(const Key('name_field')),
         'MinimalSquirrel',
       );
-      await tester.tap(find.text('SAVE'));
+      await tester.pump();
+      
+      // Verify form field was filled
+      expect(find.text('MinimalSquirrel'), findsOneWidget);
+      
+      // Tap save button - should not throw validation error
+      await tester.tap(find.widgetWithText(TextButton, 'SAVE'));
+      await tester.pump();
+      
+      // Give time for navigation to start
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(const Duration(milliseconds: 100));
       await tester.pumpAndSettle();
 
-      // Assert - Should save successfully
+      // Assert - Should have navigated away (parent screen visible)
+      expect(find.text('Open Form'), findsOneWidget);
       expect(find.byType(SquirrelFormPage), findsNothing);
     });
   });
@@ -312,6 +354,14 @@ void main() {
     testWidgets('should open date picker when date field is tapped', (
       tester,
     ) async {
+      // Set larger viewport to accommodate full form
+      tester.view.physicalSize = const Size(1080, 1920);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+      
       // Arrange
       await tester.pumpWidget(
         buildAppWithProviders(home: const SquirrelFormPage()),
@@ -325,8 +375,11 @@ void main() {
       // Assert - Date picker should appear
       expect(find.byType(DatePickerDialog), findsOneWidget);
 
-      // Cancel date picker
-      await tester.tap(find.text('Cancel'));
+      // Cancel date picker - use descendant finder to target date picker's Cancel
+      await tester.tap(find.descendant(
+        of: find.byType(DatePickerDialog),
+        matching: find.text('Cancel'),
+      ));
       await tester.pumpAndSettle();
     });
   });
@@ -335,6 +388,14 @@ void main() {
     testWidgets(
       'REGRESSION: Form accessible through navigation (provider architecture bug)',
       (tester) async {
+        // Set larger viewport to accommodate full form
+        tester.view.physicalSize = const Size(1080, 1920);
+        tester.view.devicePixelRatio = 1.0;
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+        
         // This test guards against the provider architecture bug where
         // forms accessed via navigation couldn't access providers.
 
@@ -354,7 +415,10 @@ void main() {
           find.byKey(const Key('name_field')),
           'ProviderTest',
         );
-        await tester.tap(find.text('SAVE'));
+        await tester.tap(find.byKey(const Key('save_button')));
+        await tester.pumpAndSettle();
+        // Extra pumps to ensure navigation animation completes
+        await tester.pump(const Duration(milliseconds: 500));
         await tester.pumpAndSettle();
 
         // Should complete without provider errors

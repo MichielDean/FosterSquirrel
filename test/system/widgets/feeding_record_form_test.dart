@@ -69,6 +69,14 @@ void main() {
     testWidgets(
       'should navigate to form and access FeedingRepository without errors',
       (tester) async {
+        // Set larger viewport to accommodate full form
+        tester.view.physicalSize = const Size(1080, 1920);
+        tester.view.devicePixelRatio = 1.0;
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+        
         // Arrange - Create test squirrel
         final squirrelRepo = SquirrelRepository(db);
         final squirrel = Squirrel.create(
@@ -150,6 +158,14 @@ void main() {
     );
 
     testWidgets('should cancel form without saving data', (tester) async {
+      // Set larger viewport to accommodate full form
+      tester.view.physicalSize = const Size(1080, 1920);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+      
       // Arrange
       final squirrelRepo = SquirrelRepository(db);
       final feedingRepo = FeedingRepository(db);
@@ -194,6 +210,14 @@ void main() {
     testWidgets('should show validation error when starting weight is empty', (
       tester,
     ) async {
+      // Set larger viewport to accommodate full form
+      tester.view.physicalSize = const Size(1080, 1920);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+      
       // Arrange
       final squirrelRepo = SquirrelRepository(db);
       final squirrel = Squirrel.create(
@@ -217,13 +241,21 @@ void main() {
       await tester.pump();
 
       // Assert - Should show validation error and stay on form
-      expect(find.text('Please enter starting weight'), findsOneWidget);
+      expect(find.text('Pre-feeding weight is required'), findsOneWidget);
       expect(find.byType(FeedingRecordForm), findsOneWidget);
     });
 
     testWidgets(
       'should show validation error when ending weight is less than starting',
       (tester) async {
+        // Set larger viewport to accommodate full form
+        tester.view.physicalSize = const Size(1080, 1920);
+        tester.view.devicePixelRatio = 1.0;
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+        
         // Arrange
         final squirrelRepo = SquirrelRepository(db);
         final squirrel = Squirrel.create(
@@ -242,21 +274,21 @@ void main() {
         await tester.tap(find.byIcon(Icons.add));
         await tester.pumpAndSettle();
 
-        // Act - Enter ending weight less than starting
+        // Act - Enter ending weight significantly less than starting (< 80%)
         await tester.enterText(
           find.byKey(const Key('starting_weight_field')),
           '50.0',
         );
         await tester.enterText(
           find.byKey(const Key('ending_weight_field')),
-          '48.0',
+          '35.0', // 35 < 50 * 0.8 (40), triggers validation
         );
         await tester.tap(find.text('SAVE'));
         await tester.pump();
 
         // Assert - Should show validation error
         expect(
-          find.text('Ending weight must be greater than starting weight'),
+          find.text('Ending weight seems too low compared to starting weight'),
           findsOneWidget,
         );
         expect(find.byType(FeedingRecordForm), findsOneWidget);
