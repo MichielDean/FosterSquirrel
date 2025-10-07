@@ -6,6 +6,7 @@ import 'package:foster_squirrel/repositories/drift/feeding_repository.dart';
 import 'package:foster_squirrel/repositories/drift/squirrel_repository.dart';
 
 import '../test_database_helper.dart';
+import '../../helpers/test_date_utils.dart';
 
 /// Integration tests for FeedingListProvider with real repository and database.
 ///
@@ -28,7 +29,7 @@ void main() {
     // Create a test squirrel for all tests
     testSquirrel = Squirrel.create(
       name: 'TestSquirrel',
-      foundDate: DateTime(2025, 1, 1),
+      foundDate: daysAgo(2),
       admissionWeight: admissionWeight,
     );
     await squirrelRepo.addSquirrel(testSquirrel);
@@ -52,14 +53,14 @@ void main() {
         squirrelName: testSquirrel.name,
         startingWeightGrams: 50.0,
         actualFeedAmountML: 5.0,
-      ).copyWith(feedingTime: DateTime(2025, 1, 1, 8, 0));
+      ).copyWith(feedingTime: dateWithTime(-2, 8, 0));
 
       final feeding2 = FeedingRecord.create(
         squirrelId: testSquirrel.id,
         squirrelName: testSquirrel.name,
         startingWeightGrams: 52.0,
         actualFeedAmountML: 5.0,
-      ).copyWith(feedingTime: DateTime(2025, 1, 1, 11, 0));
+      ).copyWith(feedingTime: dateWithTime(-2, 11, 0));
 
       await feedingRepo.addFeedingRecord(feeding1);
       await feedingRepo.addFeedingRecord(feeding2);
@@ -81,14 +82,14 @@ void main() {
         squirrelName: testSquirrel.name,
         startingWeightGrams: 52.0,
         actualFeedAmountML: 5.0,
-      ).copyWith(feedingTime: DateTime(2025, 1, 1, 11, 0));
+      ).copyWith(feedingTime: dateWithTime(-2, 11, 0));
 
       final feeding1 = FeedingRecord.create(
         squirrelId: testSquirrel.id,
         squirrelName: testSquirrel.name,
         startingWeightGrams: 50.0,
         actualFeedAmountML: 5.0,
-      ).copyWith(feedingTime: DateTime(2025, 1, 1, 8, 0));
+      ).copyWith(feedingTime: dateWithTime(-2, 8, 0));
 
       await feedingRepo.addFeedingRecord(feeding2);
       await feedingRepo.addFeedingRecord(feeding1);
@@ -115,7 +116,7 @@ void main() {
             startingWeightGrams: 50.0,
             actualFeedAmountML: 5.0,
           ).copyWith(
-            feedingTime: DateTime(2025, 1, 1, 8, 0),
+            feedingTime: dateWithTime(-2, 8, 0),
             endingWeightGrams: 52.0,
           );
 
@@ -126,7 +127,7 @@ void main() {
             startingWeightGrams: 52.0,
             actualFeedAmountML: 5.0,
           ).copyWith(
-            feedingTime: DateTime(2025, 1, 1, 11, 0),
+            feedingTime: dateWithTime(-2, 11, 0),
             endingWeightGrams: 54.0,
           );
 
@@ -207,7 +208,7 @@ void main() {
             startingWeightGrams: 50.0,
             actualFeedAmountML: 5.0,
           ).copyWith(
-            feedingTime: DateTime(2025, 1, 1, 8, 0),
+            feedingTime: dateWithTime(-2, 8, 0),
             endingWeightGrams: 52.0,
           );
       await provider.addFeedingRecord(feeding1);
@@ -218,7 +219,7 @@ void main() {
         squirrelName: testSquirrel.name,
         startingWeightGrams: 52.0,
         actualFeedAmountML: 5.0,
-      ).copyWith(feedingTime: DateTime(2025, 1, 1, 11, 0));
+      ).copyWith(feedingTime: dateWithTime(-2, 11, 0));
       await provider.addFeedingRecord(feeding2);
 
       // Assert - Baseline weights should be recomputed
@@ -288,7 +289,7 @@ void main() {
             startingWeightGrams: 50.0,
             actualFeedAmountML: 5.0,
           ).copyWith(
-            feedingTime: DateTime(2025, 1, 1, 8, 0),
+            feedingTime: dateWithTime(-2, 8, 0),
             endingWeightGrams: 52.0,
           );
 
@@ -297,7 +298,7 @@ void main() {
         squirrelName: testSquirrel.name,
         startingWeightGrams: 52.0,
         actualFeedAmountML: 5.0,
-      ).copyWith(feedingTime: DateTime(2025, 1, 1, 11, 0));
+      ).copyWith(feedingTime: dateWithTime(-2, 11, 0));
 
       await provider.addFeedingRecord(feeding1);
       await provider.addFeedingRecord(feeding2);
@@ -369,7 +370,7 @@ void main() {
             startingWeightGrams: 50.0,
             actualFeedAmountML: 5.0,
           ).copyWith(
-            feedingTime: DateTime(2025, 1, 1, 8, 0),
+            feedingTime: dateWithTime(-2, 8, 0),
             endingWeightGrams: 52.0,
           );
 
@@ -380,7 +381,7 @@ void main() {
             startingWeightGrams: 52.0,
             actualFeedAmountML: 5.0,
           ).copyWith(
-            feedingTime: DateTime(2025, 1, 1, 11, 0),
+            feedingTime: dateWithTime(-2, 11, 0),
             endingWeightGrams: 54.0,
           );
 
@@ -389,7 +390,7 @@ void main() {
         squirrelName: testSquirrel.name,
         startingWeightGrams: 54.0,
         actualFeedAmountML: 5.0,
-      ).copyWith(feedingTime: DateTime(2025, 1, 1, 14, 0));
+      ).copyWith(feedingTime: dateWithTime(-2, 14, 0));
 
       await provider.addFeedingRecord(feeding1);
       await provider.addFeedingRecord(feeding2);
@@ -440,7 +441,7 @@ void main() {
             startingWeightGrams: 50.0,
             actualFeedAmountML: 5.0,
           ).copyWith(
-            feedingTime: DateTime(2025, 1, 1, 8, 0),
+            feedingTime: dateWithTime(-2, 8, 0),
             endingWeightGrams: 52.0,
           );
       await provider.addFeedingRecord(feeding1);
@@ -450,7 +451,7 @@ void main() {
         squirrelName: testSquirrel.name,
         startingWeightGrams: 52.0,
         actualFeedAmountML: 5.0,
-      ).copyWith(feedingTime: DateTime(2025, 1, 1, 11, 0));
+      ).copyWith(feedingTime: dateWithTime(-2, 11, 0));
       await provider.addFeedingRecord(feeding2);
 
       final updated = feeding1.copyWith(endingWeightGrams: 53.0);

@@ -4,6 +4,7 @@ import 'package:foster_squirrel/models/feeding_record.dart';
 import 'package:foster_squirrel/providers/feeding_list_provider.dart';
 
 import '../mocks.mocks.dart';
+import '../../helpers/test_date_utils.dart';
 
 void main() {
   late MockFeedingRepository mockRepository;
@@ -58,7 +59,7 @@ void main() {
           id: 'feed-1',
           squirrelId: testSquirrelId,
           squirrelName: 'Nutkin',
-          feedingTime: DateTime(2025, 1, 1, 8, 0),
+          feedingTime: dateWithTime(-2, 8, 0),
           startingWeightGrams: 50.0,
           endingWeightGrams: 52.0,
         ),
@@ -66,7 +67,7 @@ void main() {
           id: 'feed-2',
           squirrelId: testSquirrelId,
           squirrelName: 'Nutkin',
-          feedingTime: DateTime(2025, 1, 1, 11, 0),
+          feedingTime: dateWithTime(-2, 11, 0),
           startingWeightGrams: 52.0,
           endingWeightGrams: 54.0,
         ),
@@ -91,14 +92,14 @@ void main() {
           id: 'feed-2',
           squirrelId: testSquirrelId,
           squirrelName: 'Nutkin',
-          feedingTime: DateTime(2025, 1, 1, 11, 0), // Later
+          feedingTime: todayAt(11, 0), // Later
           startingWeightGrams: 52.0,
         ),
         FeedingRecord(
           id: 'feed-1',
           squirrelId: testSquirrelId,
           squirrelName: 'Nutkin',
-          feedingTime: DateTime(2025, 1, 1, 8, 0), // Earlier
+          feedingTime: todayAt(8, 0), // Earlier
           startingWeightGrams: 50.0,
         ),
       ];
@@ -126,7 +127,7 @@ void main() {
           id: 'feed-1',
           squirrelId: testSquirrelId,
           squirrelName: 'Nutkin',
-          feedingTime: DateTime(2025, 1, 1, 8, 0),
+          feedingTime: dateWithTime(-2, 8, 0),
           startingWeightGrams: 50.0,
           endingWeightGrams: 52.0,
         ),
@@ -134,7 +135,7 @@ void main() {
           id: 'feed-2',
           squirrelId: testSquirrelId,
           squirrelName: 'Nutkin',
-          feedingTime: DateTime(2025, 1, 1, 11, 0),
+          feedingTime: dateWithTime(-2, 11, 0),
           startingWeightGrams: 52.0,
           endingWeightGrams: 54.0,
         ),
@@ -159,7 +160,7 @@ void main() {
           id: 'feed-1',
           squirrelId: testSquirrelId,
           squirrelName: 'Nutkin',
-          feedingTime: DateTime(2025, 1, 1, 8, 0),
+          feedingTime: dateWithTime(-2, 8, 0),
           startingWeightGrams: 50.0,
           // No ending weight
         ),
@@ -167,7 +168,7 @@ void main() {
           id: 'feed-2',
           squirrelId: testSquirrelId,
           squirrelName: 'Nutkin',
-          feedingTime: DateTime(2025, 1, 1, 11, 0),
+          feedingTime: dateWithTime(-2, 11, 0),
           startingWeightGrams: 50.0, // Same as previous starting
         ),
       ];
@@ -294,7 +295,7 @@ void main() {
           id: 'feed-1',
           squirrelId: testSquirrelId,
           squirrelName: 'Nutkin',
-          feedingTime: DateTime(2025, 1, 1, 8, 0),
+          feedingTime: dateWithTime(-2, 8, 0),
           startingWeightGrams: 50.0,
         ),
       ];
@@ -305,7 +306,7 @@ void main() {
           id: 'feed-2',
           squirrelId: testSquirrelId,
           squirrelName: 'Nutkin',
-          feedingTime: DateTime(2025, 1, 1, 11, 0),
+          feedingTime: dateWithTime(-2, 11, 0),
           startingWeightGrams: 52.0,
         ),
       ];
@@ -330,7 +331,7 @@ void main() {
         id: 'feed-new',
         squirrelId: testSquirrelId,
         squirrelName: 'Nutkin',
-        feedingTime: DateTime(2025, 1, 1, 8, 0),
+        feedingTime: dateWithTime(-2, 8, 0),
         startingWeightGrams: 50.0,
       );
 
@@ -414,7 +415,7 @@ void main() {
         id: 'feed-1',
         squirrelId: testSquirrelId,
         squirrelName: 'Nutkin',
-        feedingTime: DateTime(2025, 1, 1, 8, 0),
+        feedingTime: dateWithTime(-2, 8, 0),
         startingWeightGrams: 50.0,
       );
 
@@ -570,7 +571,7 @@ void main() {
           id: 'feed-1',
           squirrelId: testSquirrelId,
           squirrelName: 'Nutkin',
-          feedingTime: DateTime(2025, 1, 1, 8, 0),
+          feedingTime: dateWithTime(-2, 8, 0),
           startingWeightGrams: 50.0,
           endingWeightGrams: 52.0,
         ),
@@ -591,7 +592,7 @@ void main() {
           id: 'feed-1',
           squirrelId: testSquirrelId,
           squirrelName: 'Nutkin',
-          feedingTime: DateTime(2025, 1, 1, 8, 0),
+          feedingTime: dateWithTime(-2, 8, 0),
           startingWeightGrams: 50.0,
           endingWeightGrams: 52.0,
         ),
@@ -599,7 +600,7 @@ void main() {
           id: 'feed-2',
           squirrelId: testSquirrelId,
           squirrelName: 'Nutkin',
-          feedingTime: DateTime(2025, 1, 1, 11, 0),
+          feedingTime: dateWithTime(-2, 11, 0),
           startingWeightGrams: 52.0,
           endingWeightGrams: 54.0,
         ),
@@ -607,7 +608,7 @@ void main() {
           id: 'feed-3',
           squirrelId: testSquirrelId,
           squirrelName: 'Nutkin',
-          feedingTime: DateTime(2025, 1, 1, 14, 0),
+          feedingTime: dateWithTime(-2, 14, 0),
           startingWeightGrams: 54.0,
           endingWeightGrams: 56.0,
         ),
@@ -639,7 +640,7 @@ void main() {
           id: 'feed-1',
           squirrelId: testSquirrelId,
           squirrelName: 'Nutkin',
-          feedingTime: DateTime(2025, 1, 1, 8, 0),
+          feedingTime: dateWithTime(-2, 8, 0),
           startingWeightGrams: 50.0,
         ),
       ];
@@ -661,7 +662,7 @@ void main() {
           id: 'feed-1',
           squirrelId: testSquirrelId,
           squirrelName: 'Nutkin',
-          feedingTime: DateTime(2025, 1, 1, 8, 0),
+          feedingTime: dateWithTime(-2, 8, 0),
           startingWeightGrams: 50.0,
           endingWeightGrams: 52.0,
         ),
@@ -669,7 +670,7 @@ void main() {
           id: 'feed-2',
           squirrelId: testSquirrelId,
           squirrelName: 'Nutkin',
-          feedingTime: DateTime(2025, 1, 1, 11, 0),
+          feedingTime: dateWithTime(-2, 11, 0),
           startingWeightGrams: 52.0,
           // No ending weight
         ),
@@ -677,7 +678,7 @@ void main() {
           id: 'feed-3',
           squirrelId: testSquirrelId,
           squirrelName: 'Nutkin',
-          feedingTime: DateTime(2025, 1, 1, 14, 0),
+          feedingTime: dateWithTime(-2, 14, 0),
           startingWeightGrams: 52.0,
           endingWeightGrams: 54.0,
         ),
@@ -699,21 +700,21 @@ void main() {
           id: 'feed-3',
           squirrelId: testSquirrelId,
           squirrelName: 'Nutkin',
-          feedingTime: DateTime(2025, 1, 1, 14, 0),
+          feedingTime: dateWithTime(-2, 14, 0),
           startingWeightGrams: 54.0,
         ),
         FeedingRecord(
           id: 'feed-1',
           squirrelId: testSquirrelId,
           squirrelName: 'Nutkin',
-          feedingTime: DateTime(2025, 1, 1, 8, 0),
+          feedingTime: dateWithTime(-2, 8, 0),
           startingWeightGrams: 50.0,
         ),
         FeedingRecord(
           id: 'feed-2',
           squirrelId: testSquirrelId,
           squirrelName: 'Nutkin',
-          feedingTime: DateTime(2025, 1, 1, 11, 0),
+          feedingTime: dateWithTime(-2, 11, 0),
           startingWeightGrams: 52.0,
         ),
       ];

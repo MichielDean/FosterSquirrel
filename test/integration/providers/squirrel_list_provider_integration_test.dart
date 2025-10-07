@@ -5,6 +5,7 @@ import 'package:foster_squirrel/providers/squirrel_list_provider.dart';
 import 'package:foster_squirrel/repositories/drift/squirrel_repository.dart';
 
 import '../test_database_helper.dart';
+import '../../helpers/test_date_utils.dart';
 
 /// Integration tests for SquirrelListProvider with real repository and database.
 ///
@@ -30,13 +31,13 @@ void main() {
       // Arrange - Add squirrels to database
       final squirrel1 = Squirrel.create(
         name: 'Nutkin',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
         admissionWeight: 50.0,
         developmentStage: DevelopmentStage.infant,
       );
       final squirrel2 = Squirrel.create(
         name: 'Fluffy',
-        foundDate: DateTime(2025, 1, 2),
+        foundDate: daysAgo(1),
         admissionWeight: 55.0,
         developmentStage: DevelopmentStage.infant,
       );
@@ -62,11 +63,11 @@ void main() {
       // Arrange
       final activeSquirrel = Squirrel.create(
         name: 'Active',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       final releasedSquirrel = Squirrel.create(
         name: 'Released',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       ).copyWith(status: SquirrelStatus.released);
 
       await repository.addSquirrel(activeSquirrel);
@@ -111,7 +112,7 @@ void main() {
       // Arrange
       final squirrel = Squirrel.create(
         name: 'NewSquirrel',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
         admissionWeight: 48.0,
       );
 
@@ -138,7 +139,7 @@ void main() {
 
       final squirrel = Squirrel.create(
         name: 'Test',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
 
       // Act
@@ -152,11 +153,11 @@ void main() {
       // Arrange
       final squirrel1 = Squirrel.create(
         name: 'Squirrel1',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       final squirrel2 = Squirrel.create(
         name: 'Squirrel2',
-        foundDate: DateTime(2025, 1, 2),
+        foundDate: daysAgo(1),
       );
 
       // Act
@@ -181,7 +182,7 @@ void main() {
       // Arrange - Add squirrel
       final original = Squirrel.create(
         name: 'Original',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
         admissionWeight: 50.0,
       );
       await provider.addSquirrel(original);
@@ -205,7 +206,7 @@ void main() {
       // Arrange
       final squirrel = Squirrel.create(
         name: 'Test',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       await provider.addSquirrel(squirrel);
 
@@ -229,7 +230,7 @@ void main() {
       // Arrange
       final squirrel = Squirrel.create(
         name: 'Test',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       await provider.addSquirrel(squirrel);
 
@@ -252,7 +253,7 @@ void main() {
       // Arrange
       final squirrel = Squirrel.create(
         name: 'ToDelete',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       await provider.addSquirrel(squirrel);
       expect(provider.squirrels, hasLength(1));
@@ -272,11 +273,11 @@ void main() {
       // Arrange
       final squirrel1 = Squirrel.create(
         name: 'Keep',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       final squirrel2 = Squirrel.create(
         name: 'Delete',
-        foundDate: DateTime(2025, 1, 2),
+        foundDate: daysAgo(1),
       );
 
       await provider.addSquirrel(squirrel1);
@@ -299,7 +300,7 @@ void main() {
       // Arrange
       final squirrel = Squirrel.create(
         name: 'Test',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       await provider.addSquirrel(squirrel);
 
@@ -324,13 +325,13 @@ void main() {
       // Arrange & Act - Complex sequence of operations
       final squirrel1 = Squirrel.create(
         name: 'First',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       await provider.addSquirrel(squirrel1);
 
       final squirrel2 = Squirrel.create(
         name: 'Second',
-        foundDate: DateTime(2025, 1, 2),
+        foundDate: daysAgo(1),
       );
       await provider.addSquirrel(squirrel2);
 

@@ -13,6 +13,7 @@ import 'package:foster_squirrel/widgets/charts/weight_progress_chart.dart';
 import 'package:provider/provider.dart';
 
 import '../../integration/test_database_helper.dart';
+import '../../helpers/test_date_utils.dart';
 
 /// System tests for SquirrelDetailView
 ///
@@ -79,7 +80,7 @@ void main() {
       final squirrelRepo = SquirrelRepository(db);
       final squirrel = Squirrel.create(
         name: 'Nutkin',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
         admissionWeight: 50.0,
         developmentStage: DevelopmentStage.newborn,
       );
@@ -114,7 +115,7 @@ void main() {
 
       final squirrel = Squirrel.create(
         name: 'Hazel',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
         admissionWeight: 45.0,
         developmentStage: DevelopmentStage.newborn,
       );
@@ -125,7 +126,7 @@ void main() {
         id: '1',
         squirrelId: squirrel.id,
         squirrelName: squirrel.name,
-        feedingTime: DateTime(2025, 1, 2),
+        feedingTime: daysAgo(1),
         startingWeightGrams: 45.0,
         endingWeightGrams: 46.0,
         actualFeedAmountML: 2.0,
@@ -161,7 +162,7 @@ void main() {
 
       final squirrel = Squirrel.create(
         name: 'Rocky',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
         admissionWeight: 50.0,
         developmentStage: DevelopmentStage.newborn,
       );
@@ -171,7 +172,7 @@ void main() {
         id: '1',
         squirrelId: squirrel.id,
         squirrelName: squirrel.name,
-        feedingTime: DateTime(2025, 1, 2, 9, 0),
+        feedingTime: dateWithTime(-1, 9, 0),
         startingWeightGrams: 50.0,
         endingWeightGrams: 51.0,
         actualFeedAmountML: 3.0,
@@ -195,7 +196,10 @@ void main() {
       // SquirrelDetailView loads feedings using FeedingRepository
       expect(find.text('3.0 mL'), findsOneWidget); // Actual feeding amount
       expect(find.textContaining('50.0g'), findsWidgets); // Weight displayed
-      expect(find.textContaining('51.0g'), findsWidgets); // Ending weight displayed
+      expect(
+        find.textContaining('51.0g'),
+        findsWidgets,
+      ); // Ending weight displayed
     });
 
     testWidgets('should display info tab with squirrel details', (
@@ -205,7 +209,7 @@ void main() {
       final squirrelRepo = SquirrelRepository(db);
       final squirrel = Squirrel.create(
         name: 'Chippy',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
         admissionWeight: 55.0,
         developmentStage: DevelopmentStage.infant,
       );
@@ -223,8 +227,14 @@ void main() {
       // Info tab should be selected by default
       // Assert - Squirrel details should display
       expect(find.text('Chippy'), findsWidgets);
-      expect(find.textContaining('55.0'), findsWidgets); // Weight appears in multiple places
-      expect(find.textContaining('infant'), findsWidgets); // Development stage (lowercase)
+      expect(
+        find.textContaining('55.0'),
+        findsWidgets,
+      ); // Weight appears in multiple places
+      expect(
+        find.textContaining('infant'),
+        findsWidgets,
+      ); // Development stage (lowercase)
     });
   });
 
@@ -234,7 +244,7 @@ void main() {
       final squirrelRepo = SquirrelRepository(db);
       final squirrel = Squirrel.create(
         name: 'Tails',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
         admissionWeight: 48.0,
         developmentStage: DevelopmentStage.newborn,
       );
@@ -262,7 +272,10 @@ void main() {
       // Switch back to Info tab
       await tester.tap(find.text('Info'));
       await tester.pumpAndSettle();
-      expect(find.textContaining('48.0'), findsWidgets); // Weight displayed with unit
+      expect(
+        find.textContaining('48.0'),
+        findsWidgets,
+      ); // Weight displayed with unit
     });
   });
 
@@ -277,7 +290,7 @@ void main() {
         final squirrelRepo = SquirrelRepository(db);
         final squirrel = Squirrel.create(
           name: 'BugTest',
-          foundDate: DateTime(2025, 1, 1),
+          foundDate: daysAgo(2),
           admissionWeight: 50.0,
           developmentStage: DevelopmentStage.newborn,
         );

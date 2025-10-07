@@ -4,6 +4,7 @@ import 'package:foster_squirrel/models/squirrel.dart';
 import 'package:foster_squirrel/repositories/drift/squirrel_repository.dart';
 
 import '../test_database_helper.dart';
+import '../../helpers/test_date_utils.dart';
 
 /// Integration tests for SquirrelRepository (Drift version).
 ///
@@ -26,7 +27,7 @@ void main() {
     test('should add and retrieve squirrel successfully', () async {
       final squirrel = Squirrel.create(
         name: 'Nutkin',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
         admissionWeight: 50.0,
         developmentStage: DevelopmentStage.infant,
       );
@@ -46,24 +47,25 @@ void main() {
       final squirrel = Squirrel(
         id: 'test-squirrel-1',
         name: 'Detailed Test',
-        foundDate: DateTime(2025, 1, 15),
+        foundDate: daysFromNow(12),
         admissionWeight: 45.5,
         currentWeight: 52.3,
         status: SquirrelStatus.active,
         developmentStage: DevelopmentStage.juvenile,
         notes: 'Test notes about this squirrel',
         photoPath: '/path/to/photo.jpg',
-        createdAt: DateTime(2025, 1, 15, 8, 0),
-        updatedAt: DateTime(2025, 1, 15, 10, 0),
+        createdAt: dateWithTime(12, 8, 0),
+        updatedAt: dateWithTime(12, 10, 0),
       );
 
       await repository.addSquirrel(squirrel);
       final retrieved = await repository.getSquirrel(squirrel.id);
 
       expect(retrieved!.name, equals('Detailed Test'));
-      expect(retrieved.foundDate.year, equals(2025));
-      expect(retrieved.foundDate.month, equals(1));
-      expect(retrieved.foundDate.day, equals(15));
+      // Check the foundDate matches what we set (use isSameDay-like comparison)
+      expect(retrieved.foundDate.year, equals(squirrel.foundDate.year));
+      expect(retrieved.foundDate.month, equals(squirrel.foundDate.month));
+      expect(retrieved.foundDate.day, equals(squirrel.foundDate.day));
       expect(retrieved.admissionWeight, equals(45.5));
       expect(retrieved.currentWeight, equals(52.3));
       expect(retrieved.status, equals(SquirrelStatus.active));
@@ -81,12 +83,12 @@ void main() {
     test('should add multiple squirrels independently', () async {
       final squirrel1 = Squirrel.create(
         name: 'Nutkin',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
 
       final squirrel2 = Squirrel.create(
         name: 'Fluffy',
-        foundDate: DateTime(2025, 1, 2),
+        foundDate: daysAgo(1),
       );
 
       await repository.addSquirrel(squirrel1);
@@ -106,7 +108,7 @@ void main() {
     test('should update squirrel successfully', () async {
       final original = Squirrel.create(
         name: 'Original Name',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
         admissionWeight: 50.0,
       );
 
@@ -132,7 +134,7 @@ void main() {
     test('should update status correctly', () async {
       final squirrel = Squirrel.create(
         name: 'Test',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
         admissionWeight: 50.0,
       );
 
@@ -149,7 +151,7 @@ void main() {
     test('should update development stage correctly', () async {
       final squirrel = Squirrel.create(
         name: 'Growing',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
         developmentStage: DevelopmentStage.infant,
       );
 
@@ -168,7 +170,7 @@ void main() {
     test('should update notes correctly', () async {
       final squirrel = Squirrel.create(
         name: 'Noted',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
         notes: 'Original notes',
       );
 
@@ -187,7 +189,7 @@ void main() {
     test('should delete squirrel successfully', () async {
       final squirrel = Squirrel.create(
         name: 'ToDelete',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
 
       await repository.addSquirrel(squirrel);
@@ -211,9 +213,9 @@ void main() {
 
     test('should handle multiple deletes correctly', () async {
       final squirrels = [
-        Squirrel.create(name: 'Squirrel1', foundDate: DateTime(2025, 1, 1)),
-        Squirrel.create(name: 'Squirrel2', foundDate: DateTime(2025, 1, 2)),
-        Squirrel.create(name: 'Squirrel3', foundDate: DateTime(2025, 1, 3)),
+        Squirrel.create(name: 'Squirrel1', foundDate: daysAgo(2)),
+        Squirrel.create(name: 'Squirrel2', foundDate: daysAgo(1)),
+        Squirrel.create(name: 'Squirrel3', foundDate: today),
       ];
 
       for (final squirrel in squirrels) {
@@ -231,9 +233,9 @@ void main() {
   group('SquirrelRepository - Query Operations', () {
     test('should get all squirrels', () async {
       final squirrels = [
-        Squirrel.create(name: 'Squirrel1', foundDate: DateTime(2025, 1, 1)),
-        Squirrel.create(name: 'Squirrel2', foundDate: DateTime(2025, 1, 2)),
-        Squirrel.create(name: 'Squirrel3', foundDate: DateTime(2025, 1, 3)),
+        Squirrel.create(name: 'Squirrel1', foundDate: daysAgo(2)),
+        Squirrel.create(name: 'Squirrel2', foundDate: daysAgo(1)),
+        Squirrel.create(name: 'Squirrel3', foundDate: today),
       ];
 
       for (final squirrel in squirrels) {
@@ -252,17 +254,17 @@ void main() {
     test('should get only active squirrels', () async {
       final active1 = Squirrel.create(
         name: 'Active1',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
 
       final active2 = Squirrel.create(
         name: 'Active2',
-        foundDate: DateTime(2025, 1, 2),
+        foundDate: daysAgo(1),
       );
 
       final released = Squirrel.create(
         name: 'Released',
-        foundDate: DateTime(2025, 1, 3),
+        foundDate: today,
       );
 
       await repository.addSquirrel(active1);
@@ -290,15 +292,15 @@ void main() {
     test('should get squirrels by status', () async {
       final active = Squirrel.create(
         name: 'Active',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       final released = Squirrel.create(
         name: 'Released',
-        foundDate: DateTime(2025, 1, 2),
+        foundDate: daysAgo(1),
       );
       final deceased = Squirrel.create(
         name: 'Deceased',
-        foundDate: DateTime(2025, 1, 3),
+        foundDate: today,
       );
 
       await repository.addSquirrel(active);
@@ -332,7 +334,7 @@ void main() {
         await repository.addSquirrel(
           Squirrel.create(
             name: 'Squirrel$i',
-            foundDate: DateTime(2025, 1, i + 1),
+            foundDate: daysAgo(2 - i),
           ),
         );
       }
@@ -358,7 +360,7 @@ void main() {
     test('should update squirrel weight correctly', () async {
       final squirrel = Squirrel.create(
         name: 'Growing',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
         admissionWeight: 50.0,
       );
 
@@ -374,7 +376,7 @@ void main() {
     test('should handle multiple weight updates', () async {
       final squirrel = Squirrel.create(
         name: 'Growing',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
         admissionWeight: 50.0,
       );
 
@@ -394,13 +396,13 @@ void main() {
     test('should identify squirrels without weight', () async {
       final withWeight = Squirrel.create(
         name: 'WithWeight',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
         admissionWeight: 50.0,
       );
 
       final withoutWeight = Squirrel.create(
         name: 'WithoutWeight',
-        foundDate: DateTime(2025, 1, 2),
+        foundDate: daysAgo(1),
       );
 
       await repository.addSquirrel(withWeight);
@@ -415,12 +417,12 @@ void main() {
     test('should only include active squirrels needing attention', () async {
       final activeNoWeight = Squirrel.create(
         name: 'ActiveNoWeight',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
 
       final releasedNoWeight = Squirrel.create(
         name: 'ReleasedNoWeight',
-        foundDate: DateTime(2025, 1, 2),
+        foundDate: daysAgo(1),
       );
 
       await repository.addSquirrel(activeNoWeight);
@@ -441,7 +443,7 @@ void main() {
     test('should handle rapid consecutive operations', () async {
       final squirrel = Squirrel.create(
         name: 'RapidTest',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
 
       await repository.addSquirrel(squirrel);
@@ -459,7 +461,7 @@ void main() {
         10,
         (i) => Squirrel.create(
           name: 'Squirrel$i',
-          foundDate: DateTime(2025, 1, i + 1),
+          foundDate: daysAgo(2 - i),
           admissionWeight: 50.0 + i,
         ),
       );

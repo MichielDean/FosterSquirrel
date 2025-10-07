@@ -9,6 +9,7 @@ import 'package:foster_squirrel/widgets/forms/squirrel_form.dart';
 import 'package:provider/provider.dart';
 
 import '../../integration/test_database_helper.dart';
+import '../../helpers/test_date_utils.dart';
 
 /// Mock repository that throws errors for testing error states
 class ErrorThrowingSquirrelRepository extends SquirrelRepository {
@@ -140,13 +141,13 @@ void main() {
       // Arrange - Add test squirrels
       final squirrel1 = Squirrel.create(
         name: 'Nutkin',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
         admissionWeight: 50.0,
         developmentStage: DevelopmentStage.newborn,
       ).copyWith(currentWeight: 55.0);
       final squirrel2 = Squirrel.create(
         name: 'Hazel',
-        foundDate: DateTime(2025, 1, 5),
+        foundDate: daysFromNow(2),
         admissionWeight: 45.0,
         developmentStage: DevelopmentStage.infant,
       ).copyWith(currentWeight: 52.0);
@@ -228,7 +229,7 @@ void main() {
       // Arrange
       final squirrel = Squirrel.create(
         name: 'TestSquirrel',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
         admissionWeight: 50.0,
         developmentStage: DevelopmentStage.newborn,
       );
@@ -292,7 +293,7 @@ void main() {
       // Arrange
       final squirrel = Squirrel.create(
         name: 'WeightTest',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
         admissionWeight: 50.0,
         developmentStage: DevelopmentStage.newborn,
       );
@@ -314,7 +315,7 @@ void main() {
       // Arrange
       final squirrel = Squirrel.create(
         name: 'Rocky',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
         admissionWeight: 50.0,
         developmentStage: DevelopmentStage.newborn,
       );
@@ -380,7 +381,7 @@ void main() {
       // Arrange
       final squirrel = Squirrel.create(
         name: 'NavigationTest',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
         admissionWeight: 50.0,
         developmentStage: DevelopmentStage.newborn,
       );
@@ -463,7 +464,7 @@ void main() {
         await squirrelRepo.addSquirrel(
           Squirrel.create(
             name: 'Squirrel$i',
-            foundDate: DateTime(2025, 1, i),
+            foundDate: daysAgo(3 - i),
             admissionWeight: 50.0,
             developmentStage: DevelopmentStage.newborn,
           ),
@@ -515,7 +516,7 @@ void main() {
       // Act - Add squirrel through provider
       final squirrel = Squirrel.create(
         name: 'DynamicAdd',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
         admissionWeight: 50.0,
         developmentStage: DevelopmentStage.newborn,
       );
@@ -555,7 +556,7 @@ void main() {
       // Act - Add squirrel
       final squirrel = Squirrel.create(
         name: 'NewSquirrel',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
         admissionWeight: 50.0,
         developmentStage: DevelopmentStage.newborn,
       );
@@ -574,7 +575,7 @@ void main() {
       // Arrange
       final squirrel = Squirrel.create(
         name: 'NoWeight',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
         admissionWeight: 50.0,
         developmentStage: DevelopmentStage.newborn,
       ).copyWith(currentWeight: null); // No current weight
@@ -596,7 +597,7 @@ void main() {
       // Arrange
       final squirrel = Squirrel.create(
         name: 'VeryLongSquirrelNameThatExceedsReasonableLengthForDisplay',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
         admissionWeight: 50.0,
         developmentStage: DevelopmentStage.newborn,
       );
@@ -643,7 +644,7 @@ void main() {
         await squirrelRepo.addSquirrel(
           Squirrel.create(
             name: 'Squirrel${++index}',
-            foundDate: DateTime(2025, 1, index),
+            foundDate: daysAgo(3 - index),
             admissionWeight: 50.0,
             developmentStage: stage,
           ),

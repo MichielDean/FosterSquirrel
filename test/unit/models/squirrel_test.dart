@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foster_squirrel/models/squirrel.dart';
+import '../../helpers/test_date_utils.dart';
 
 void main() {
   group('DevelopmentStage', () {
@@ -103,7 +104,7 @@ void main() {
     test(
       'should calculate estimated birth date for newborn found 5 days ago',
       () {
-        final foundDate = DateTime(2025, 1, 10);
+        final foundDate = daysFromNow(7);
         final squirrel = Squirrel(
           id: 'test-1',
           name: 'Testy',
@@ -119,7 +120,7 @@ void main() {
     );
 
     test('should calculate estimated birth date for infant', () {
-      final foundDate = DateTime(2025, 1, 20);
+      final foundDate = daysFromNow(17);
       final squirrel = Squirrel(
         id: 'test-2',
         name: 'Testy',
@@ -316,7 +317,7 @@ void main() {
     test('should create squirrel with UUID using factory', () {
       final squirrel = Squirrel.create(
         name: 'Factory Test',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
         admissionWeight: 50.0,
       );
 
@@ -336,7 +337,7 @@ void main() {
     test('should create squirrel with specified development stage', () {
       final squirrel = Squirrel.create(
         name: 'Stage Test',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
         developmentStage: DevelopmentStage.juvenile,
       );
 
@@ -347,22 +348,23 @@ void main() {
       final squirrel = Squirrel(
         id: 'json-test-id',
         name: 'JSON Test',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
         admissionWeight: 50.0,
         currentWeight: 75.0,
         status: SquirrelStatus.active,
         developmentStage: DevelopmentStage.infant,
         notes: 'Test notes',
         photoPath: '/path/to/photo.jpg',
-        createdAt: DateTime(2025, 1, 1, 10, 0),
-        updatedAt: DateTime(2025, 1, 1, 11, 0),
+        createdAt: dateWithTime(-2, 10, 0),
+        updatedAt: dateWithTime(-2, 11, 0),
       );
 
       final json = squirrel.toJson();
 
       expect(json['id'], equals('json-test-id'));
       expect(json['name'], equals('JSON Test'));
-      expect(json['found_date'], equals('2025-01-01T00:00:00.000'));
+      // Check date is serialized correctly (check format, not exact value)
+      expect(json['found_date'], equals(squirrel.foundDate.toIso8601String()));
       expect(json['admission_weight'], equals(50.0));
       expect(json['current_weight'], equals(75.0));
       expect(json['status'], equals('active'));
@@ -390,7 +392,8 @@ void main() {
 
       expect(squirrel.id, equals('json-test-id'));
       expect(squirrel.name, equals('JSON Test'));
-      expect(squirrel.foundDate, equals(DateTime(2025, 1, 1)));
+      // Deserialize date correctly from the JSON
+      expect(squirrel.foundDate, equals(DateTime.parse('2025-01-01T00:00:00.000')));
       expect(squirrel.admissionWeight, equals(50.0));
       expect(squirrel.currentWeight, equals(75.0));
       expect(squirrel.status, equals(SquirrelStatus.active));
@@ -427,7 +430,7 @@ void main() {
       final original = Squirrel(
         id: 'copy-test',
         name: 'Original Name',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
 
       final copy = original.copyWith(name: 'New Name');
@@ -441,7 +444,7 @@ void main() {
       final original = Squirrel(
         id: 'copy-test',
         name: 'Test',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
         currentWeight: 50.0,
       );
 
@@ -455,7 +458,7 @@ void main() {
       final original = Squirrel(
         id: 'copy-test',
         name: 'Test',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
         status: SquirrelStatus.active,
       );
 
@@ -468,7 +471,7 @@ void main() {
       final original = Squirrel(
         id: 'copy-test',
         name: 'Original',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
         admissionWeight: 50.0,
         currentWeight: 75.0,
         developmentStage: DevelopmentStage.infant,
@@ -490,13 +493,13 @@ void main() {
       final squirrel1 = Squirrel(
         id: 'same-id',
         name: 'Name 1',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
 
       final squirrel2 = Squirrel(
         id: 'same-id',
         name: 'Name 2',
-        foundDate: DateTime(2025, 1, 2),
+        foundDate: daysAgo(1),
       );
 
       expect(squirrel1, equals(squirrel2));
@@ -507,13 +510,13 @@ void main() {
       final squirrel1 = Squirrel(
         id: 'id-1',
         name: 'Same Name',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
 
       final squirrel2 = Squirrel(
         id: 'id-2',
         name: 'Same Name',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
 
       expect(squirrel1, isNot(equals(squirrel2)));

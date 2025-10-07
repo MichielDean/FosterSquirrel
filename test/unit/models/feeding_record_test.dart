@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foster_squirrel/models/feeding_record.dart';
 import 'package:foster_squirrel/utils/weight_converter.dart';
+import '../../helpers/test_date_utils.dart';
 
 void main() {
   group('FeedingRecord - Weight Calculations', () {
@@ -322,14 +323,14 @@ void main() {
         id: 'json-test',
         squirrelId: 'squirrel-1',
         squirrelName: 'JSON Test',
-        feedingTime: DateTime(2025, 1, 1, 10, 30),
+        feedingTime: dateWithTime(-2, 10, 30),
         startingWeightGrams: 100.0,
         endingWeightGrams: 105.0,
         notes: 'Test notes',
         foodType: 'Formula',
         actualFeedAmountML: 3.5,
-        createdAt: DateTime(2025, 1, 1, 10, 0),
-        updatedAt: DateTime(2025, 1, 1, 11, 0),
+        createdAt: dateWithTime(-2, 10, 0),
+        updatedAt: dateWithTime(-2, 11, 0),
       );
 
       final json = record.toJson();
@@ -412,7 +413,7 @@ void main() {
         id: 'copy-test',
         squirrelId: 'squirrel-1',
         squirrelName: 'Test',
-        feedingTime: DateTime(2025, 1, 1),
+        feedingTime: daysAgo(2),
         startingWeightGrams: 100.0,
         endingWeightGrams: 105.0,
         notes: 'Original notes',
@@ -572,15 +573,15 @@ void main() {
     });
 
     test('should identify first and last feeding times', () {
-      final firstTime = DateTime(2025, 1, 1, 8, 0);
-      final lastTime = DateTime(2025, 1, 1, 20, 0);
+      final firstTime = dateWithTime(-2, 8, 0);
+      final lastTime = dateWithTime(-2, 20, 0);
 
       final records = [
         FeedingRecord(
           id: '1',
           squirrelId: 'sq-1',
           squirrelName: 'Test',
-          feedingTime: DateTime(2025, 1, 1, 12, 0),
+          feedingTime: dateWithTime(-2, 12, 0),
           startingWeightGrams: 100.0,
         ),
         FeedingRecord(

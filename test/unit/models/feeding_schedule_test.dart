@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foster_squirrel/models/feeding_schedule.dart';
+import '../../helpers/test_date_utils.dart';
 
 void main() {
   group('FeedingSchedule - Weight-based Schedule Selection', () {
@@ -144,7 +145,7 @@ void main() {
       final schedule = FeedingSchedule.getScheduleForWeight(
         50.0,
       ); // 3.0 hours interval
-      final lastFeeding = DateTime(2025, 1, 1, 10, 0);
+      final lastFeeding = dateWithTime(-2, 10, 0);
 
       final nextFeeding = schedule.getNextFeedingTime(
         lastFeedingTime: lastFeeding,
@@ -158,7 +159,7 @@ void main() {
       final schedule = FeedingSchedule.getScheduleForWeight(
         70.0,
       ); // 3.5 hours interval
-      final lastFeeding = DateTime(2025, 1, 1, 10, 0);
+      final lastFeeding = dateWithTime(-2, 10, 0);
 
       final nextFeeding = schedule.getNextFeedingTime(
         lastFeedingTime: lastFeeding,
@@ -172,7 +173,7 @@ void main() {
       final schedule = FeedingSchedule.getScheduleForWeight(
         140.0,
       ); // No night feeding required
-      final lastFeeding = DateTime(2025, 1, 1, 22, 0); // 10 PM
+      final lastFeeding = dateWithTime(-2, 22, 0); // 10 PM
 
       final nextFeeding = schedule.getNextFeedingTime(
         lastFeedingTime: lastFeeding,
@@ -189,7 +190,7 @@ void main() {
         final schedule = FeedingSchedule.getScheduleForWeight(
           50.0,
         ); // Night feeding required
-        final lastFeeding = DateTime(2025, 1, 1, 22, 0);
+        final lastFeeding = dateWithTime(-2, 22, 0);
 
         final nextFeeding = schedule.getNextFeedingTime(
           lastFeedingTime: lastFeeding,
@@ -197,7 +198,7 @@ void main() {
         );
 
         // Should use regular 3.0 hour interval
-        expect(nextFeeding, equals(DateTime(2025, 1, 2, 1, 0)));
+        expect(nextFeeding, equals(dateWithTime(-1, 1, 0)));
       },
     );
   });
@@ -207,14 +208,9 @@ void main() {
       final schedule = FeedingSchedule.getScheduleForWeight(
         50.0,
       ); // 3.0 hours interval
-      final lastFeeding = DateTime(2025, 1, 1, 10, 0);
-      final currentTime = DateTime(
-        2025,
-        1,
-        1,
-        13,
-        45,
-      ); // 3h 45min later (45min past due)
+      final lastFeeding = dateWithTime(-2, 10, 0);
+      // Current time is 3h 45min after last feeding (45min past due)
+      final currentTime = dateWithTime(-2, 13, 45);
 
       final isOverdue = schedule.isFeedingOverdue(
         lastFeedingTime: lastFeeding,
@@ -228,7 +224,7 @@ void main() {
       final schedule = FeedingSchedule.getScheduleForWeight(
         50.0,
       ); // 3.0 hours, small squirrel
-      final lastFeeding = DateTime(2025, 1, 1, 10, 0);
+      final lastFeeding = dateWithTime(-2, 10, 0);
       final currentTime = DateTime(
         2025,
         1,
@@ -249,8 +245,8 @@ void main() {
       final schedule = FeedingSchedule.getScheduleForWeight(
         150.0,
       ); // Larger squirrel
-      final lastFeeding = DateTime(2025, 1, 1, 10, 0);
-      final currentTime = DateTime(2025, 1, 1, 15, 30); // 5h 30min later
+      final lastFeeding = dateWithTime(-2, 10, 0);
+      final currentTime = dateWithTime(-2, 15, 30); // 5h 30min later
 
       // Older squirrels get 1 hour flexibility, so 4.5h + 1h = 5.5h threshold
       final isOverdue = schedule.isFeedingOverdue(
@@ -264,27 +260,27 @@ void main() {
 
   group('FeedingSchedule - Night Time Detection', () {
     test('should detect 11 PM as night time', () {
-      final time = DateTime(2025, 1, 1, 23, 0);
+      final time = dateWithTime(-2, 23, 0);
       expect(FeedingSchedule.isNightTime(currentTime: time), isTrue);
     });
 
     test('should detect 2 AM as night time', () {
-      final time = DateTime(2025, 1, 1, 2, 0);
+      final time = dateWithTime(-2, 2, 0);
       expect(FeedingSchedule.isNightTime(currentTime: time), isTrue);
     });
 
     test('should detect 10 AM as day time', () {
-      final time = DateTime(2025, 1, 1, 10, 0);
+      final time = dateWithTime(-2, 10, 0);
       expect(FeedingSchedule.isNightTime(currentTime: time), isFalse);
     });
 
     test('should detect 6 AM as day time boundary', () {
-      final time = DateTime(2025, 1, 1, 6, 0);
+      final time = dateWithTime(-2, 6, 0);
       expect(FeedingSchedule.isNightTime(currentTime: time), isFalse);
     });
 
     test('should detect 10 PM as night time boundary', () {
-      final time = DateTime(2025, 1, 1, 22, 0);
+      final time = dateWithTime(-2, 22, 0);
       expect(FeedingSchedule.isNightTime(currentTime: time), isTrue);
     });
   });
@@ -294,7 +290,7 @@ void main() {
       final schedule = FeedingSchedule.getScheduleForWeight(
         50.0,
       ); // Every 3 hours
-      final startDate = DateTime(2025, 1, 1);
+      final startDate = daysAgo(2);
 
       final feedingTimes = schedule.getDailyFeedingTimes(startDate: startDate);
 
@@ -311,7 +307,7 @@ void main() {
       final schedule = FeedingSchedule.getScheduleForWeight(
         50.0,
       ); // Requires night feeding
-      final startDate = DateTime(2025, 1, 1);
+      final startDate = daysAgo(2);
 
       final feedingTimes = schedule.getDailyFeedingTimes(startDate: startDate);
 
@@ -323,7 +319,7 @@ void main() {
       final schedule = FeedingSchedule.getScheduleForWeight(
         150.0,
       ); // No night feeding
-      final startDate = DateTime(2025, 1, 1);
+      final startDate = daysAgo(2);
 
       final feedingTimes = schedule.getDailyFeedingTimes(startDate: startDate);
 
@@ -336,7 +332,7 @@ void main() {
 
     test('should sort feeding times chronologically', () {
       final schedule = FeedingSchedule.getScheduleForWeight(50.0);
-      final startDate = DateTime(2025, 1, 1);
+      final startDate = daysAgo(2);
 
       final feedingTimes = schedule.getDailyFeedingTimes(startDate: startDate);
 
@@ -374,7 +370,7 @@ void main() {
       final reminder = FeedingReminder(
         squirrelId: 'sq-1',
         squirrelName: 'Nutkin',
-        scheduledTime: DateTime(2025, 1, 1, 14, 30),
+        scheduledTime: dateWithTime(-2, 14, 30),
         recommendedAmountML: 2.5,
         isOverdue: false,
         schedule: schedule,
@@ -443,7 +439,7 @@ void main() {
       final reminder = FeedingReminder(
         squirrelId: 'sq-1',
         squirrelName: 'Nutkin',
-        scheduledTime: DateTime(2025, 1, 1, 8, 30),
+        scheduledTime: dateWithTime(-2, 8, 30),
         recommendedAmountML: 2.5,
         isOverdue: false,
         schedule: schedule,
@@ -459,7 +455,7 @@ void main() {
       final reminder = FeedingReminder(
         squirrelId: 'sq-1',
         squirrelName: 'Nutkin',
-        scheduledTime: DateTime(2025, 1, 1, 15, 45),
+        scheduledTime: dateWithTime(-2, 15, 45),
         recommendedAmountML: 2.5,
         isOverdue: false,
         schedule: schedule,
@@ -475,7 +471,7 @@ void main() {
       final reminder = FeedingReminder(
         squirrelId: 'sq-1',
         squirrelName: 'Nutkin',
-        scheduledTime: DateTime(2025, 1, 1, 0, 0),
+        scheduledTime: dateWithTime(-2, 0, 0),
         recommendedAmountML: 2.5,
         isOverdue: false,
         schedule: schedule,
@@ -491,7 +487,7 @@ void main() {
       final reminder = FeedingReminder(
         squirrelId: 'sq-1',
         squirrelName: 'Nutkin',
-        scheduledTime: DateTime(2025, 1, 1, 12, 0),
+        scheduledTime: dateWithTime(-2, 12, 0),
         recommendedAmountML: 2.5,
         isOverdue: false,
         schedule: schedule,

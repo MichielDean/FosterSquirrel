@@ -5,6 +5,7 @@ import 'package:foster_squirrel/repositories/drift/care_note_repository.dart';
 import 'package:foster_squirrel/repositories/drift/squirrel_repository.dart';
 
 import '../test_database_helper.dart';
+import '../../helpers/test_date_utils.dart';
 
 /// Integration tests for CareNoteRepository (Drift version).
 ///
@@ -30,7 +31,7 @@ void main() {
       // Add squirrel first
       final squirrel = Squirrel.create(
         name: 'Nutkin',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       await squirrelRepo.addSquirrel(squirrel);
 
@@ -54,11 +55,11 @@ void main() {
     test('should persist all care note fields correctly', () async {
       final squirrel = Squirrel.create(
         name: 'Test',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       await squirrelRepo.addSquirrel(squirrel);
 
-      final createdAt = DateTime(2025, 1, 15, 10, 30);
+      final createdAt = dateWithTime(12, 10, 30);
       final note = CareNote(
         id: 'note-1',
         squirrelId: squirrel.id,
@@ -98,7 +99,7 @@ void main() {
     test('should get all care notes for squirrel ordered by date', () async {
       final squirrel = Squirrel.create(
         name: 'Test',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       await squirrelRepo.addSquirrel(squirrel);
 
@@ -108,7 +109,7 @@ void main() {
         squirrelId: squirrel.id,
         content: 'First note',
         noteType: CareNoteType.general,
-        createdAt: DateTime(2025, 1, 1, 10, 0),
+        createdAt: dateWithTime(-2, 10, 0),
       );
 
       final note2 = CareNote(
@@ -116,7 +117,7 @@ void main() {
         squirrelId: squirrel.id,
         content: 'Second note',
         noteType: CareNoteType.medical,
-        createdAt: DateTime(2025, 1, 1, 14, 0),
+        createdAt: dateWithTime(-2, 14, 0),
       );
 
       await careNoteRepo.addCareNote(note1);
@@ -133,7 +134,7 @@ void main() {
     test('should return empty list when squirrel has no notes', () async {
       final squirrel = Squirrel.create(
         name: 'Test',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       await squirrelRepo.addSquirrel(squirrel);
 
@@ -145,7 +146,7 @@ void main() {
     test('should get care notes filtered by type', () async {
       final squirrel = Squirrel.create(
         name: 'Test',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       await squirrelRepo.addSquirrel(squirrel);
 
@@ -185,7 +186,7 @@ void main() {
     test('should get only important care notes', () async {
       final squirrel = Squirrel.create(
         name: 'Test',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       await squirrelRepo.addSquirrel(squirrel);
 
@@ -220,11 +221,11 @@ void main() {
       // Add two squirrels
       final squirrel1 = Squirrel.create(
         name: 'Squirrel 1',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       final squirrel2 = Squirrel.create(
         name: 'Squirrel 2',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
 
       await squirrelRepo.addSquirrel(squirrel1);
@@ -236,7 +237,7 @@ void main() {
         squirrelId: squirrel1.id,
         content: 'Note from squirrel 1',
         noteType: CareNoteType.general,
-        createdAt: DateTime(2025, 1, 1, 10, 0),
+        createdAt: dateWithTime(-2, 10, 0),
       );
 
       final note2 = CareNote(
@@ -244,7 +245,7 @@ void main() {
         squirrelId: squirrel2.id,
         content: 'Note from squirrel 2',
         noteType: CareNoteType.general,
-        createdAt: DateTime(2025, 1, 1, 14, 0),
+        createdAt: dateWithTime(-2, 14, 0),
       );
 
       await careNoteRepo.addCareNote(note1);
@@ -261,7 +262,7 @@ void main() {
     test('should respect limit when getting recent notes', () async {
       final squirrel = Squirrel.create(
         name: 'Test',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       await squirrelRepo.addSquirrel(squirrel);
 
@@ -272,7 +273,7 @@ void main() {
           squirrelId: squirrel.id,
           content: 'Note $i',
           noteType: CareNoteType.general,
-          createdAt: DateTime(2025, 1, 1, 10 + i, 0),
+          createdAt: dateWithTime(-2, 10 + i, 0),
         );
         await careNoteRepo.addCareNote(note);
       }
@@ -287,7 +288,7 @@ void main() {
     test('should get care notes within date range', () async {
       final squirrel = Squirrel.create(
         name: 'Test',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       await squirrelRepo.addSquirrel(squirrel);
 
@@ -297,7 +298,7 @@ void main() {
         squirrelId: squirrel.id,
         content: 'Note 1',
         noteType: CareNoteType.general,
-        createdAt: DateTime(2025, 1, 10, 10, 0),
+        createdAt: dateWithTime(7, 10, 0),
       );
 
       final note2 = CareNote(
@@ -305,7 +306,7 @@ void main() {
         squirrelId: squirrel.id,
         content: 'Note 2',
         noteType: CareNoteType.general,
-        createdAt: DateTime(2025, 1, 15, 10, 0),
+        createdAt: dateWithTime(12, 10, 0),
       );
 
       final note3 = CareNote(
@@ -313,7 +314,7 @@ void main() {
         squirrelId: squirrel.id,
         content: 'Note 3',
         noteType: CareNoteType.general,
-        createdAt: DateTime(2025, 1, 20, 10, 0),
+        createdAt: dateWithTime(17, 10, 0),
       );
 
       await careNoteRepo.addCareNote(note1);
@@ -323,8 +324,8 @@ void main() {
       // Query for notes between Jan 12 and Jan 18
       final notes = await careNoteRepo.getCareNotesInRange(
         squirrel.id,
-        DateTime(2025, 1, 12),
-        DateTime(2025, 1, 18),
+        daysFromNow(9),
+        daysFromNow(15),
       );
 
       expect(notes, hasLength(1));
@@ -334,7 +335,7 @@ void main() {
     test('should return empty list when no notes in range', () async {
       final squirrel = Squirrel.create(
         name: 'Test',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       await squirrelRepo.addSquirrel(squirrel);
 
@@ -343,7 +344,7 @@ void main() {
         squirrelId: squirrel.id,
         content: 'Note 1',
         noteType: CareNoteType.general,
-        createdAt: DateTime(2025, 1, 10, 10, 0),
+        createdAt: dateWithTime(7, 10, 0),
       );
 
       await careNoteRepo.addCareNote(note);
@@ -351,8 +352,8 @@ void main() {
       // Query for different date range
       final notes = await careNoteRepo.getCareNotesInRange(
         squirrel.id,
-        DateTime(2025, 2, 1),
-        DateTime(2025, 2, 28),
+        daysFromNow(29),
+        daysFromNow(56),
       );
 
       expect(notes, isEmpty);
@@ -363,7 +364,7 @@ void main() {
     test('should search care notes by content', () async {
       final squirrel = Squirrel.create(
         name: 'Test',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       await squirrelRepo.addSquirrel(squirrel);
 
@@ -403,11 +404,11 @@ void main() {
     test('should search across all squirrels', () async {
       final squirrel1 = Squirrel.create(
         name: 'Squirrel 1',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       final squirrel2 = Squirrel.create(
         name: 'Squirrel 2',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
 
       await squirrelRepo.addSquirrel(squirrel1);
@@ -443,7 +444,7 @@ void main() {
     test('should return empty list when no matches found', () async {
       final squirrel = Squirrel.create(
         name: 'Test',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       await squirrelRepo.addSquirrel(squirrel);
 
@@ -468,7 +469,7 @@ void main() {
     test('should get only care notes with photos', () async {
       final squirrel = Squirrel.create(
         name: 'Test',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       await squirrelRepo.addSquirrel(squirrel);
 
@@ -502,7 +503,7 @@ void main() {
     test('should get care note counts by type', () async {
       final squirrel = Squirrel.create(
         name: 'Test',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       await squirrelRepo.addSquirrel(squirrel);
 
@@ -542,7 +543,7 @@ void main() {
     test('should update care note successfully', () async {
       final squirrel = Squirrel.create(
         name: 'Test',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       await squirrelRepo.addSquirrel(squirrel);
 
@@ -588,7 +589,7 @@ void main() {
     test('should delete care note successfully', () async {
       final squirrel = Squirrel.create(
         name: 'Test',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       await squirrelRepo.addSquirrel(squirrel);
 
@@ -623,7 +624,7 @@ void main() {
     test('should delete all care notes for squirrel', () async {
       final squirrel = Squirrel.create(
         name: 'Test',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       await squirrelRepo.addSquirrel(squirrel);
 
@@ -659,7 +660,7 @@ void main() {
     test('should watch care notes for squirrel', () async {
       final squirrel = Squirrel.create(
         name: 'Test',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       await squirrelRepo.addSquirrel(squirrel);
 
@@ -692,7 +693,7 @@ void main() {
     test('should watch important care notes only', () async {
       final squirrel = Squirrel.create(
         name: 'Test',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       await squirrelRepo.addSquirrel(squirrel);
 
@@ -738,7 +739,7 @@ void main() {
     test('should watch single care note by ID', () async {
       final squirrel = Squirrel.create(
         name: 'Test',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       await squirrelRepo.addSquirrel(squirrel);
 

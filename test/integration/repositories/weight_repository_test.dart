@@ -6,6 +6,7 @@ import 'package:foster_squirrel/repositories/drift/squirrel_repository.dart';
 import 'package:foster_squirrel/repositories/drift/weight_repository.dart';
 
 import '../test_database_helper.dart';
+import '../../helpers/test_date_utils.dart';
 
 /// Integration tests for WeightRepository (Drift version).
 ///
@@ -32,7 +33,7 @@ void main() {
     test('should get weight trend from feeding records', () async {
       final squirrel = Squirrel.create(
         name: 'Test',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       await squirrelRepo.addSquirrel(squirrel);
 
@@ -41,24 +42,24 @@ void main() {
         id: 'feed-1',
         squirrelId: squirrel.id,
         squirrelName: squirrel.name,
-        feedingTime: DateTime(2025, 1, 1, 10, 0),
+        feedingTime: dateWithTime(-2, 10, 0),
         startingWeightGrams: 50.0,
         endingWeightGrams: 52.0,
         actualFeedAmountML: 5.0,
-        createdAt: DateTime(2025, 1, 1, 10, 0),
-        updatedAt: DateTime(2025, 1, 1, 10, 0),
+        createdAt: dateWithTime(-2, 10, 0),
+        updatedAt: dateWithTime(-2, 10, 0),
       );
 
       final feeding2 = FeedingRecord(
         id: 'feed-2',
         squirrelId: squirrel.id,
         squirrelName: squirrel.name,
-        feedingTime: DateTime(2025, 1, 2, 10, 0),
+        feedingTime: dateWithTime(-1, 10, 0),
         startingWeightGrams: 52.0,
         endingWeightGrams: 55.0,
         actualFeedAmountML: 5.0,
-        createdAt: DateTime(2025, 1, 2, 10, 0),
-        updatedAt: DateTime(2025, 1, 2, 10, 0),
+        createdAt: dateWithTime(-1, 10, 0),
+        updatedAt: dateWithTime(-1, 10, 0),
       );
 
       await feedingRepo.addFeedingRecord(feeding1);
@@ -76,7 +77,7 @@ void main() {
       () async {
         final squirrel = Squirrel.create(
           name: 'Test',
-          foundDate: DateTime(2025, 1, 1),
+          foundDate: daysAgo(2),
         );
         await squirrelRepo.addSquirrel(squirrel);
 
@@ -85,11 +86,11 @@ void main() {
           id: 'feed-1',
           squirrelId: squirrel.id,
           squirrelName: squirrel.name,
-          feedingTime: DateTime(2025, 1, 1, 10, 0),
+          feedingTime: dateWithTime(-2, 10, 0),
           startingWeightGrams: 50.0,
           actualFeedAmountML: 5.0,
-          createdAt: DateTime(2025, 1, 1, 10, 0),
-          updatedAt: DateTime(2025, 1, 1, 10, 0),
+          createdAt: dateWithTime(-2, 10, 0),
+          updatedAt: dateWithTime(-2, 10, 0),
         );
 
         await feedingRepo.addFeedingRecord(feeding);
@@ -104,7 +105,7 @@ void main() {
     test('should return empty list when no feeding records', () async {
       final squirrel = Squirrel.create(
         name: 'Test',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       await squirrelRepo.addSquirrel(squirrel);
 
@@ -116,7 +117,7 @@ void main() {
     test('should return data points sorted by date', () async {
       final squirrel = Squirrel.create(
         name: 'Test',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       await squirrelRepo.addSquirrel(squirrel);
 
@@ -125,22 +126,22 @@ void main() {
         id: 'feed-2',
         squirrelId: squirrel.id,
         squirrelName: squirrel.name,
-        feedingTime: DateTime(2025, 1, 2, 10, 0),
+        feedingTime: dateWithTime(-1, 10, 0),
         startingWeightGrams: 55.0,
         actualFeedAmountML: 5.0,
-        createdAt: DateTime(2025, 1, 2, 10, 0),
-        updatedAt: DateTime(2025, 1, 2, 10, 0),
+        createdAt: dateWithTime(-1, 10, 0),
+        updatedAt: dateWithTime(-1, 10, 0),
       );
 
       final feeding1 = FeedingRecord(
         id: 'feed-1',
         squirrelId: squirrel.id,
         squirrelName: squirrel.name,
-        feedingTime: DateTime(2025, 1, 1, 10, 0),
+        feedingTime: dateWithTime(-2, 10, 0),
         startingWeightGrams: 50.0,
         actualFeedAmountML: 5.0,
-        createdAt: DateTime(2025, 1, 1, 10, 0),
-        updatedAt: DateTime(2025, 1, 1, 10, 0),
+        createdAt: dateWithTime(-2, 10, 0),
+        updatedAt: dateWithTime(-2, 10, 0),
       );
 
       await feedingRepo.addFeedingRecord(feeding2);
@@ -158,7 +159,7 @@ void main() {
     test('should get latest weight from most recent feeding', () async {
       final squirrel = Squirrel.create(
         name: 'Test',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       await squirrelRepo.addSquirrel(squirrel);
 
@@ -168,12 +169,12 @@ void main() {
           id: 'feed-1',
           squirrelId: squirrel.id,
           squirrelName: squirrel.name,
-          feedingTime: DateTime(2025, 1, 1, 10, 0),
+          feedingTime: dateWithTime(-2, 10, 0),
           startingWeightGrams: 50.0,
           endingWeightGrams: 52.0,
           actualFeedAmountML: 5.0,
-          createdAt: DateTime(2025, 1, 1, 10, 0),
-          updatedAt: DateTime(2025, 1, 1, 10, 0),
+          createdAt: dateWithTime(-2, 10, 0),
+          updatedAt: dateWithTime(-2, 10, 0),
         ),
       );
 
@@ -182,12 +183,12 @@ void main() {
           id: 'feed-2',
           squirrelId: squirrel.id,
           squirrelName: squirrel.name,
-          feedingTime: DateTime(2025, 1, 2, 10, 0),
+          feedingTime: dateWithTime(-1, 10, 0),
           startingWeightGrams: 52.0,
           endingWeightGrams: 55.0,
           actualFeedAmountML: 5.0,
-          createdAt: DateTime(2025, 1, 2, 10, 0),
-          updatedAt: DateTime(2025, 1, 2, 10, 0),
+          createdAt: dateWithTime(-1, 10, 0),
+          updatedAt: dateWithTime(-1, 10, 0),
         ),
       );
 
@@ -199,7 +200,7 @@ void main() {
     test('should return null when no feeding records', () async {
       final squirrel = Squirrel.create(
         name: 'Test',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       await squirrelRepo.addSquirrel(squirrel);
 
@@ -213,7 +214,7 @@ void main() {
     test('should calculate average weight over date range', () async {
       final squirrel = Squirrel.create(
         name: 'Test',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       await squirrelRepo.addSquirrel(squirrel);
 
@@ -223,12 +224,12 @@ void main() {
           id: 'feed-1',
           squirrelId: squirrel.id,
           squirrelName: squirrel.name,
-          feedingTime: DateTime(2025, 1, 10, 10, 0),
+          feedingTime: dateWithTime(7, 10, 0),
           startingWeightGrams: 50.0,
           endingWeightGrams: 52.0,
           actualFeedAmountML: 5.0,
-          createdAt: DateTime(2025, 1, 10, 10, 0),
-          updatedAt: DateTime(2025, 1, 10, 10, 0),
+          createdAt: dateWithTime(7, 10, 0),
+          updatedAt: dateWithTime(7, 10, 0),
         ),
       );
 
@@ -237,12 +238,12 @@ void main() {
           id: 'feed-2',
           squirrelId: squirrel.id,
           squirrelName: squirrel.name,
-          feedingTime: DateTime(2025, 1, 15, 10, 0),
+          feedingTime: dateWithTime(12, 10, 0),
           startingWeightGrams: 54.0,
           endingWeightGrams: 56.0,
           actualFeedAmountML: 5.0,
-          createdAt: DateTime(2025, 1, 15, 10, 0),
-          updatedAt: DateTime(2025, 1, 15, 10, 0),
+          createdAt: dateWithTime(12, 10, 0),
+          updatedAt: dateWithTime(12, 10, 0),
         ),
       );
 
@@ -251,20 +252,20 @@ void main() {
           id: 'feed-3',
           squirrelId: squirrel.id,
           squirrelName: squirrel.name,
-          feedingTime: DateTime(2025, 1, 20, 10, 0),
+          feedingTime: dateWithTime(17, 10, 0),
           startingWeightGrams: 58.0,
           endingWeightGrams: 60.0,
           actualFeedAmountML: 5.0,
-          createdAt: DateTime(2025, 1, 20, 10, 0),
-          updatedAt: DateTime(2025, 1, 20, 10, 0),
+          createdAt: dateWithTime(17, 10, 0),
+          updatedAt: dateWithTime(17, 10, 0),
         ),
       );
 
       // Average of feedings in Jan 12-18 range (only feeding2)
       final avgWeight = await weightRepo.getAverageWeight(
         squirrel.id,
-        DateTime(2025, 1, 12),
-        DateTime(2025, 1, 18),
+        daysFromNow(9),
+        daysFromNow(15),
       );
 
       expect(avgWeight, equals(56.0));
@@ -273,14 +274,14 @@ void main() {
     test('should return null when no records in range', () async {
       final squirrel = Squirrel.create(
         name: 'Test',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       await squirrelRepo.addSquirrel(squirrel);
 
       final avgWeight = await weightRepo.getAverageWeight(
         squirrel.id,
-        DateTime(2025, 2, 1),
-        DateTime(2025, 2, 28),
+        daysFromNow(29),
+        daysFromNow(56),
       );
 
       expect(avgWeight, isNull);
@@ -291,7 +292,7 @@ void main() {
     test('should calculate weight change between dates', () async {
       final squirrel = Squirrel.create(
         name: 'Test',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       await squirrelRepo.addSquirrel(squirrel);
 
@@ -301,12 +302,12 @@ void main() {
           id: 'feed-1',
           squirrelId: squirrel.id,
           squirrelName: squirrel.name,
-          feedingTime: DateTime(2025, 1, 1, 10, 0),
+          feedingTime: dateWithTime(-2, 10, 0),
           startingWeightGrams: 50.0,
           endingWeightGrams: 52.0,
           actualFeedAmountML: 5.0,
-          createdAt: DateTime(2025, 1, 1, 10, 0),
-          updatedAt: DateTime(2025, 1, 1, 10, 0),
+          createdAt: dateWithTime(-2, 10, 0),
+          updatedAt: dateWithTime(-2, 10, 0),
         ),
       );
 
@@ -316,26 +317,19 @@ void main() {
           id: 'feed-2',
           squirrelId: squirrel.id,
           squirrelName: squirrel.name,
-          feedingTime: DateTime(2025, 1, 10, 10, 0),
+          feedingTime: dateWithTime(7, 10, 0),
           startingWeightGrams: 60.0,
           endingWeightGrams: 62.0,
           actualFeedAmountML: 5.0,
-          createdAt: DateTime(2025, 1, 10, 10, 0),
-          updatedAt: DateTime(2025, 1, 10, 10, 0),
+          createdAt: dateWithTime(7, 10, 0),
+          updatedAt: dateWithTime(7, 10, 0),
         ),
       );
 
       final weightChange = await weightRepo.getWeightChange(
         squirrel.id,
-        DateTime(2025, 1, 1),
-        DateTime(
-          2025,
-          1,
-          10,
-          23,
-          59,
-          59,
-        ), // End of day to include the 10 AM feeding
+        dateWithTime(-2, 0, 0), // Start of first day
+        dateWithTime(7, 23, 59, 59), // End of day to include the 10 AM feeding
       );
 
       // Change from first starting weight (50.0) to last ending weight (62.0)
@@ -345,14 +339,14 @@ void main() {
     test('should return null when no records in range', () async {
       final squirrel = Squirrel.create(
         name: 'Test',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       await squirrelRepo.addSquirrel(squirrel);
 
       final weightChange = await weightRepo.getWeightChange(
         squirrel.id,
-        DateTime(2025, 2, 1),
-        DateTime(2025, 2, 28),
+        daysFromNow(29),
+        daysFromNow(56),
       );
 
       expect(weightChange, isNull);
@@ -361,7 +355,7 @@ void main() {
     test('should handle negative weight change', () async {
       final squirrel = Squirrel.create(
         name: 'Test',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
       );
       await squirrelRepo.addSquirrel(squirrel);
 
@@ -371,11 +365,11 @@ void main() {
           id: 'feed-1',
           squirrelId: squirrel.id,
           squirrelName: squirrel.name,
-          feedingTime: DateTime(2025, 1, 1, 10, 0),
+          feedingTime: dateWithTime(-2, 10, 0),
           startingWeightGrams: 60.0,
           actualFeedAmountML: 5.0,
-          createdAt: DateTime(2025, 1, 1, 10, 0),
-          updatedAt: DateTime(2025, 1, 1, 10, 0),
+          createdAt: dateWithTime(-2, 10, 0),
+          updatedAt: dateWithTime(-2, 10, 0),
         ),
       );
 
@@ -385,26 +379,19 @@ void main() {
           id: 'feed-2',
           squirrelId: squirrel.id,
           squirrelName: squirrel.name,
-          feedingTime: DateTime(2025, 1, 10, 10, 0),
+          feedingTime: dateWithTime(7, 10, 0),
           startingWeightGrams: 50.0,
           endingWeightGrams: 52.0,
           actualFeedAmountML: 5.0,
-          createdAt: DateTime(2025, 1, 10, 10, 0),
-          updatedAt: DateTime(2025, 1, 10, 10, 0),
+          createdAt: dateWithTime(7, 10, 0),
+          updatedAt: dateWithTime(7, 10, 0),
         ),
       );
 
       final weightChange = await weightRepo.getWeightChange(
         squirrel.id,
-        DateTime(2025, 1, 1),
-        DateTime(
-          2025,
-          1,
-          10,
-          23,
-          59,
-          59,
-        ), // End of day to include the 10 AM feeding
+        dateWithTime(-2, 0, 0), // Start of first day
+        dateWithTime(7, 23, 59, 59), // End of day to include the 10 AM feeding
       );
 
       // Change from 60.0 to 52.0 = -8.0

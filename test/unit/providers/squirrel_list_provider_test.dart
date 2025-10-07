@@ -4,6 +4,7 @@ import 'package:foster_squirrel/models/squirrel.dart';
 import 'package:foster_squirrel/providers/squirrel_list_provider.dart';
 
 import '../mocks.mocks.dart';
+import '../../helpers/test_date_utils.dart';
 
 void main() {
   late MockSquirrelRepository mockRepository;
@@ -38,13 +39,13 @@ void main() {
         Squirrel(
           id: 'sq-1',
           name: 'Nutkin',
-          foundDate: DateTime(2025, 1, 1),
+          foundDate: daysAgo(2),
           status: SquirrelStatus.active,
         ),
         Squirrel(
           id: 'sq-2',
           name: 'Fluffy',
-          foundDate: DateTime(2025, 1, 2),
+          foundDate: daysAgo(1),
           status: SquirrelStatus.active,
         ),
       ];

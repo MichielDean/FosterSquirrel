@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:foster_squirrel/models/care_note.dart';
+import '../../helpers/test_date_utils.dart';
 
 void main() {
   group('CareNoteType', () {
@@ -136,7 +137,7 @@ void main() {
         squirrelId: 'sq-1',
         content: 'Original content',
         noteType: CareNoteType.medical,
-        createdAt: DateTime(2025, 1, 1),
+        createdAt: daysAgo(2),
         photoPath: '/original/path.jpg',
         isImportant: false,
       );
@@ -204,7 +205,7 @@ void main() {
         squirrelId: 'sq-1',
         content: 'Test content',
         noteType: CareNoteType.medical,
-        createdAt: DateTime(2025, 1, 15, 10, 30),
+        createdAt: dateWithTime(12, 10, 30),
         photoPath: '/path/to/photo.jpg',
         isImportant: true,
       );
@@ -215,7 +216,8 @@ void main() {
       expect(json['squirrel_id'], equals('sq-1'));
       expect(json['content'], equals('Test content'));
       expect(json['note_type'], equals('medical'));
-      expect(json['created_at'], equals('2025-01-15T10:30:00.000'));
+      // Check date is serialized correctly (check format, not exact value)
+      expect(json['created_at'], equals(note.createdAt.toIso8601String()));
       expect(json['photo_path'], equals('/path/to/photo.jpg'));
       expect(json['is_important'], isTrue);
     });
@@ -226,7 +228,7 @@ void main() {
         squirrelId: 'sq-1',
         content: 'Test content',
         noteType: CareNoteType.general,
-        createdAt: DateTime(2025, 1, 15),
+        createdAt: daysFromNow(12),
         isImportant: false,
       );
 
@@ -253,7 +255,8 @@ void main() {
       expect(note.squirrelId, equals('sq-1'));
       expect(note.content, equals('Test content'));
       expect(note.noteType, equals(CareNoteType.behavioral));
-      expect(note.createdAt, equals(DateTime(2025, 1, 15, 10, 30)));
+      // Deserialize date correctly from the JSON
+      expect(note.createdAt, equals(DateTime.parse('2025-01-15T10:30:00.000')));
       expect(note.photoPath, equals('/path/to/photo.jpg'));
       expect(note.isImportant, isTrue);
     });
@@ -295,7 +298,7 @@ void main() {
         squirrelId: 'sq-1',
         content: 'Round trip test',
         noteType: CareNoteType.development,
-        createdAt: DateTime(2025, 1, 15, 10, 30),
+        createdAt: dateWithTime(12, 10, 30),
         photoPath: '/path/to/photo.jpg',
         isImportant: true,
       );
@@ -320,7 +323,7 @@ void main() {
         squirrelId: 'sq-1',
         content: 'Content 1',
         noteType: CareNoteType.medical,
-        createdAt: DateTime(2025, 1, 1),
+        createdAt: daysAgo(2),
       );
 
       final note2 = CareNote(
@@ -328,7 +331,7 @@ void main() {
         squirrelId: 'sq-2',
         content: 'Content 2',
         noteType: CareNoteType.behavioral,
-        createdAt: DateTime(2025, 1, 2),
+        createdAt: daysAgo(1),
       );
 
       expect(note1, equals(note2));
@@ -341,7 +344,7 @@ void main() {
         squirrelId: 'sq-1',
         content: 'Content',
         noteType: CareNoteType.medical,
-        createdAt: DateTime(2025, 1, 1),
+        createdAt: daysAgo(2),
       );
 
       final note2 = CareNote(
@@ -349,7 +352,7 @@ void main() {
         squirrelId: 'sq-1',
         content: 'Content',
         noteType: CareNoteType.medical,
-        createdAt: DateTime(2025, 1, 1),
+        createdAt: daysAgo(2),
       );
 
       expect(note1, isNot(equals(note2)));
@@ -361,7 +364,7 @@ void main() {
         squirrelId: 'sq-1',
         content: 'Content',
         noteType: CareNoteType.medical,
-        createdAt: DateTime(2025, 1, 1),
+        createdAt: daysAgo(2),
       );
 
       expect(note, equals(note));
@@ -376,7 +379,7 @@ void main() {
         squirrelId: 'sq-1',
         content: 'Test content',
         noteType: CareNoteType.medical,
-        createdAt: DateTime(2025, 1, 15),
+        createdAt: daysFromNow(12),
         isImportant: true,
       );
 

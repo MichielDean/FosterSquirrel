@@ -12,6 +12,7 @@ import 'package:foster_squirrel/widgets/forms/feeding_record_form.dart';
 import 'package:provider/provider.dart';
 
 import '../../integration/test_database_helper.dart';
+import '../../helpers/test_date_utils.dart';
 
 /// System tests for FeedingRecordForm
 ///
@@ -76,12 +77,12 @@ void main() {
           tester.view.resetPhysicalSize();
           tester.view.resetDevicePixelRatio();
         });
-        
+
         // Arrange - Create test squirrel
         final squirrelRepo = SquirrelRepository(db);
         final squirrel = Squirrel.create(
           name: 'TestSquirrel',
-          foundDate: DateTime(2025, 1, 1),
+          foundDate: daysAgo(2),
           admissionWeight: 50.0,
           developmentStage: DevelopmentStage.newborn,
         );
@@ -111,7 +112,7 @@ void main() {
         final feedingRepo = FeedingRepository(db);
         final squirrel = Squirrel.create(
           name: 'Nutkin',
-          foundDate: DateTime(2025, 1, 1),
+          foundDate: daysAgo(2),
           admissionWeight: 48.0,
           developmentStage: DevelopmentStage.newborn,
         );
@@ -165,13 +166,13 @@ void main() {
         tester.view.resetPhysicalSize();
         tester.view.resetDevicePixelRatio();
       });
-      
+
       // Arrange
       final squirrelRepo = SquirrelRepository(db);
       final feedingRepo = FeedingRepository(db);
       final squirrel = Squirrel.create(
         name: 'Rocky',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
         admissionWeight: 50.0,
         developmentStage: DevelopmentStage.infant,
       );
@@ -217,12 +218,12 @@ void main() {
         tester.view.resetPhysicalSize();
         tester.view.resetDevicePixelRatio();
       });
-      
+
       // Arrange
       final squirrelRepo = SquirrelRepository(db);
       final squirrel = Squirrel.create(
         name: 'Hazel',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
         admissionWeight: 45.0,
         developmentStage: DevelopmentStage.newborn,
       );
@@ -255,12 +256,12 @@ void main() {
           tester.view.resetPhysicalSize();
           tester.view.resetDevicePixelRatio();
         });
-        
+
         // Arrange
         final squirrelRepo = SquirrelRepository(db);
         final squirrel = Squirrel.create(
           name: 'Chippy',
-          foundDate: DateTime(2025, 1, 1),
+          foundDate: daysAgo(2),
           admissionWeight: 50.0,
           developmentStage: DevelopmentStage.newborn,
         );
@@ -306,7 +307,7 @@ void main() {
 
       final squirrel = Squirrel.create(
         name: 'Tails',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
         admissionWeight: 45.0,
         developmentStage: DevelopmentStage.newborn,
       );
@@ -316,7 +317,7 @@ void main() {
         id: 'existing-1',
         squirrelId: squirrel.id,
         squirrelName: squirrel.name,
-        feedingTime: DateTime(2025, 1, 2, 9, 0),
+        feedingTime: dateWithTime(-1, 9, 0),
         startingWeightGrams: 45.0,
         endingWeightGrams: 46.0,
         actualFeedAmountML: 2.5,
@@ -351,7 +352,7 @@ void main() {
 
       final squirrel = Squirrel.create(
         name: 'Sonic',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
         admissionWeight: 48.0,
         developmentStage: DevelopmentStage.newborn,
       );
@@ -361,7 +362,7 @@ void main() {
         id: 'existing-2',
         squirrelId: squirrel.id,
         squirrelName: squirrel.name,
-        feedingTime: DateTime(2025, 1, 2, 9, 0),
+        feedingTime: dateWithTime(-1, 9, 0),
         startingWeightGrams: 48.0,
         endingWeightGrams: 49.0,
         actualFeedAmountML: 2.0,
@@ -404,7 +405,7 @@ void main() {
         final squirrelRepo = SquirrelRepository(db);
         final squirrel = Squirrel.create(
           name: 'BugTest',
-          foundDate: DateTime(2025, 1, 1),
+          foundDate: daysAgo(2),
           admissionWeight: 50.0,
           developmentStage: DevelopmentStage.newborn,
         );

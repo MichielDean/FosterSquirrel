@@ -12,6 +12,7 @@ import 'package:foster_squirrel/widgets/forms/squirrel_form.dart';
 import 'package:provider/provider.dart';
 
 import '../../integration/test_database_helper.dart';
+import '../../helpers/test_date_utils.dart';
 
 /// System tests for SquirrelFormPage
 ///
@@ -187,7 +188,7 @@ void main() {
       expect(find.text('Weight must be greater than 0'), findsOneWidget);
     });
 
-    testWidgets('should allow saving with only name (weight optional)', (
+    testWidgets('should allow saving with required fields (name and weight)', (
       tester,
     ) async {
       // Set larger viewport to accommodate full form
@@ -197,7 +198,7 @@ void main() {
         tester.view.resetPhysicalSize();
         tester.view.resetDevicePixelRatio();
       });
-      
+
       // Arrange - Use Scaffold with Navigator so pop() works
       await tester.pumpWidget(
         buildAppWithProviders(
@@ -220,25 +221,33 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      
+
       // Navigate to form
       await tester.tap(find.text('Open Form'));
       await tester.pumpAndSettle();
 
-      // Act - Save with only name
+      // Act - Fill in required fields (name and weight)
       await tester.enterText(
         find.byKey(const Key('name_field')),
         'MinimalSquirrel',
       );
       await tester.pump();
       
-      // Verify form field was filled
+      // Weight is actually required, so provide it
+      await tester.enterText(
+        find.byKey(const Key('weight_field')),
+        '45.0',
+      );
+      await tester.pump();
+
+      // Verify form fields were filled
       expect(find.text('MinimalSquirrel'), findsOneWidget);
-      
-      // Tap save button - should not throw validation error
+      expect(find.text('45.0'), findsOneWidget);
+
+      // Tap save button - should succeed
       await tester.tap(find.widgetWithText(TextButton, 'SAVE'));
       await tester.pump();
-      
+
       // Give time for navigation to start
       await tester.pump(const Duration(milliseconds: 100));
       await tester.pump(const Duration(milliseconds: 100));
@@ -258,7 +267,7 @@ void main() {
       // Arrange - Create existing squirrel
       final squirrel = Squirrel.create(
         name: 'ExistingSquirrel',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
         admissionWeight: 45.0,
         developmentStage: DevelopmentStage.infant,
         notes: 'Test notes',
@@ -281,7 +290,7 @@ void main() {
       final squirrelRepo = SquirrelRepository(db);
       final originalSquirrel = Squirrel.create(
         name: 'Original',
-        foundDate: DateTime(2025, 1, 1),
+        foundDate: daysAgo(2),
         admissionWeight: 45.0,
         developmentStage: DevelopmentStage.newborn,
       );
@@ -320,8 +329,14 @@ void main() {
       await tester.tap(find.byKey(const Key('development_stage_dropdown')));
       await tester.pumpAndSettle();
 
-      // Select infant stage
-      await tester.tap(find.text('infant (2-5w)').last);
+      // Select infant stage - Use descendant finder to specifically target the dropdown menu item
+      // The dropdown creates an overlay with menu items, so we need to be specific
+      await tester.tap(
+        find.descendant(
+          of: find.byType(DropdownMenuItem<DevelopmentStage>),
+          matching: find.text('infant (2-5w)'),
+        ).first,
+      );
       await tester.pumpAndSettle();
 
       // Assert - Infant should be selected
@@ -361,7 +376,7 @@ void main() {
         tester.view.resetPhysicalSize();
         tester.view.resetDevicePixelRatio();
       });
-      
+
       // Arrange
       await tester.pumpWidget(
         buildAppWithProviders(home: const SquirrelFormPage()),
@@ -376,10 +391,12 @@ void main() {
       expect(find.byType(DatePickerDialog), findsOneWidget);
 
       // Cancel date picker - use descendant finder to target date picker's Cancel
-      await tester.tap(find.descendant(
-        of: find.byType(DatePickerDialog),
-        matching: find.text('Cancel'),
-      ));
+      await tester.tap(
+        find.descendant(
+          of: find.byType(DatePickerDialog),
+          matching: find.text('Cancel'),
+        ),
+      );
       await tester.pumpAndSettle();
     });
   });
@@ -395,7 +412,7 @@ void main() {
           tester.view.resetPhysicalSize();
           tester.view.resetDevicePixelRatio();
         });
-        
+
         // This test guards against the provider architecture bug where
         // forms accessed via navigation couldn't access providers.
 
@@ -411,10 +428,17 @@ void main() {
         expect(find.byType(SquirrelFormPage), findsOneWidget);
 
         // Fill and save (validates providers are accessible)
+        // Both name and weight are required
         await tester.enterText(
           find.byKey(const Key('name_field')),
           'ProviderTest',
         );
+        await tester.pump();
+        await tester.enterText(
+          find.byKey(const Key('weight_field')),
+          '50.0',
+        );
+        await tester.pump();
         await tester.tap(find.byKey(const Key('save_button')));
         await tester.pumpAndSettle();
         // Extra pumps to ensure navigation animation completes
