@@ -15,8 +15,8 @@ fi
 
 echo "Preparing release version: $VERSION"
 
-# Store the project root directory
-PROJECT_ROOT=$(pwd)
+# Store the project root directory reliably
+PROJECT_ROOT=$(cd "$(dirname "$0")/.." && pwd)
 
 # Calculate build number from semantic version
 # Format: major * 10000 + minor * 100 + patch
