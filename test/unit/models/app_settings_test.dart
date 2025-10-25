@@ -438,7 +438,7 @@ void main() {
   group('AppSettings - Equality', () {
     test('should be equal when all fields match', () {
       final backupDate = daysFromNow(12);
-      
+
       final settings1 = AppSettings(
         darkMode: true,
         feedingReminderIntervalHours: 4,
