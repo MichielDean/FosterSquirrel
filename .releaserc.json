@@ -53,7 +53,7 @@
       "@semantic-release/exec",
       {
         "verifyConditionsCmd": "flutter --version",
-        "prepareCmd": "sed -i 's/^version: .*/version: ${nextRelease.version}+${nextRelease.version.split(\".\").map((n,i) => i === 0 ? parseInt(n) * 10000 : i === 1 ? parseInt(n) * 100 : parseInt(n)).reduce((a,b) => a + b, 0)}/' pubspec.yaml && flutter build apk --release && flutter build appbundle --release && mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/FosterSquirrel-v${nextRelease.version}.apk && mv build/app/outputs/bundle/release/app-release.aab build/app/outputs/bundle/release/FosterSquirrel-v${nextRelease.version}.aab && cd build/app/outputs/flutter-apk && sha256sum FosterSquirrel-v${nextRelease.version}.apk > FosterSquirrel-v${nextRelease.version}.apk.sha256 && cd ../../bundle/release && sha256sum FosterSquirrel-v${nextRelease.version}.aab > FosterSquirrel-v${nextRelease.version}.aab.sha256"
+        "prepareCmd": "bash scripts/prepare-release.sh ${nextRelease.version}"
       }
     ],
     [
