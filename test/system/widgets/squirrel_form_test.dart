@@ -232,12 +232,9 @@ void main() {
         'MinimalSquirrel',
       );
       await tester.pump();
-      
+
       // Weight is actually required, so provide it
-      await tester.enterText(
-        find.byKey(const Key('weight_field')),
-        '45.0',
-      );
+      await tester.enterText(find.byKey(const Key('weight_field')), '45.0');
       await tester.pump();
 
       // Verify form fields were filled
@@ -332,10 +329,12 @@ void main() {
       // Select infant stage - Use descendant finder to specifically target the dropdown menu item
       // The dropdown creates an overlay with menu items, so we need to be specific
       await tester.tap(
-        find.descendant(
-          of: find.byType(DropdownMenuItem<DevelopmentStage>),
-          matching: find.text('infant (2-5w)'),
-        ).first,
+        find
+            .descendant(
+              of: find.byType(DropdownMenuItem<DevelopmentStage>),
+              matching: find.text('infant (2-5w)'),
+            )
+            .first,
       );
       await tester.pumpAndSettle();
 
@@ -434,10 +433,7 @@ void main() {
           'ProviderTest',
         );
         await tester.pump();
-        await tester.enterText(
-          find.byKey(const Key('weight_field')),
-          '50.0',
-        );
+        await tester.enterText(find.byKey(const Key('weight_field')), '50.0');
         await tester.pump();
         await tester.tap(find.byKey(const Key('save_button')));
         await tester.pumpAndSettle();

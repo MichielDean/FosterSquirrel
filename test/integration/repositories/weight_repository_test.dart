@@ -31,10 +31,7 @@ void main() {
 
   group('WeightRepository - Get Weight Trend Data', () {
     test('should get weight trend from feeding records', () async {
-      final squirrel = Squirrel.create(
-        name: 'Test',
-        foundDate: daysAgo(2),
-      );
+      final squirrel = Squirrel.create(name: 'Test', foundDate: daysAgo(2));
       await squirrelRepo.addSquirrel(squirrel);
 
       // Add feeding records with weights
@@ -75,10 +72,7 @@ void main() {
     test(
       'should use starting weight when ending weight not available',
       () async {
-        final squirrel = Squirrel.create(
-          name: 'Test',
-          foundDate: daysAgo(2),
-        );
+        final squirrel = Squirrel.create(name: 'Test', foundDate: daysAgo(2));
         await squirrelRepo.addSquirrel(squirrel);
 
         // Add feeding without ending weight
@@ -103,10 +97,7 @@ void main() {
     );
 
     test('should return empty list when no feeding records', () async {
-      final squirrel = Squirrel.create(
-        name: 'Test',
-        foundDate: daysAgo(2),
-      );
+      final squirrel = Squirrel.create(name: 'Test', foundDate: daysAgo(2));
       await squirrelRepo.addSquirrel(squirrel);
 
       final weightData = await weightRepo.getWeightTrendData(squirrel.id);
@@ -115,10 +106,7 @@ void main() {
     });
 
     test('should return data points sorted by date', () async {
-      final squirrel = Squirrel.create(
-        name: 'Test',
-        foundDate: daysAgo(2),
-      );
+      final squirrel = Squirrel.create(name: 'Test', foundDate: daysAgo(2));
       await squirrelRepo.addSquirrel(squirrel);
 
       // Add feedings out of order
@@ -157,10 +145,7 @@ void main() {
 
   group('WeightRepository - Get Latest Weight', () {
     test('should get latest weight from most recent feeding', () async {
-      final squirrel = Squirrel.create(
-        name: 'Test',
-        foundDate: daysAgo(2),
-      );
+      final squirrel = Squirrel.create(name: 'Test', foundDate: daysAgo(2));
       await squirrelRepo.addSquirrel(squirrel);
 
       // Add multiple feedings
@@ -198,10 +183,7 @@ void main() {
     });
 
     test('should return null when no feeding records', () async {
-      final squirrel = Squirrel.create(
-        name: 'Test',
-        foundDate: daysAgo(2),
-      );
+      final squirrel = Squirrel.create(name: 'Test', foundDate: daysAgo(2));
       await squirrelRepo.addSquirrel(squirrel);
 
       final latestWeight = await weightRepo.getLatestWeight(squirrel.id);
@@ -212,10 +194,7 @@ void main() {
 
   group('WeightRepository - Get Average Weight', () {
     test('should calculate average weight over date range', () async {
-      final squirrel = Squirrel.create(
-        name: 'Test',
-        foundDate: daysAgo(2),
-      );
+      final squirrel = Squirrel.create(name: 'Test', foundDate: daysAgo(2));
       await squirrelRepo.addSquirrel(squirrel);
 
       // Add feedings with different weights
@@ -261,7 +240,7 @@ void main() {
         ),
       );
 
-      // Average of feedings in Jan 12-18 range (only feeding2)
+      // Average of feedings in 9-15 days from now range (only feeding2)
       final avgWeight = await weightRepo.getAverageWeight(
         squirrel.id,
         daysFromNow(9),
@@ -272,10 +251,7 @@ void main() {
     });
 
     test('should return null when no records in range', () async {
-      final squirrel = Squirrel.create(
-        name: 'Test',
-        foundDate: daysAgo(2),
-      );
+      final squirrel = Squirrel.create(name: 'Test', foundDate: daysAgo(2));
       await squirrelRepo.addSquirrel(squirrel);
 
       final avgWeight = await weightRepo.getAverageWeight(
@@ -290,10 +266,7 @@ void main() {
 
   group('WeightRepository - Get Weight Change', () {
     test('should calculate weight change between dates', () async {
-      final squirrel = Squirrel.create(
-        name: 'Test',
-        foundDate: daysAgo(2),
-      );
+      final squirrel = Squirrel.create(name: 'Test', foundDate: daysAgo(2));
       await squirrelRepo.addSquirrel(squirrel);
 
       // Add feeding at start of range
@@ -329,7 +302,7 @@ void main() {
       final weightChange = await weightRepo.getWeightChange(
         squirrel.id,
         dateWithTime(-2, 0, 0), // Start of first day
-        dateWithTime(7, 23, 59, 59), // End of day to include the 10 AM feeding
+        endOfDay(7), // End of day to include the 10 AM feeding
       );
 
       // Change from first starting weight (50.0) to last ending weight (62.0)
@@ -337,10 +310,7 @@ void main() {
     });
 
     test('should return null when no records in range', () async {
-      final squirrel = Squirrel.create(
-        name: 'Test',
-        foundDate: daysAgo(2),
-      );
+      final squirrel = Squirrel.create(name: 'Test', foundDate: daysAgo(2));
       await squirrelRepo.addSquirrel(squirrel);
 
       final weightChange = await weightRepo.getWeightChange(
@@ -353,10 +323,7 @@ void main() {
     });
 
     test('should handle negative weight change', () async {
-      final squirrel = Squirrel.create(
-        name: 'Test',
-        foundDate: daysAgo(2),
-      );
+      final squirrel = Squirrel.create(name: 'Test', foundDate: daysAgo(2));
       await squirrelRepo.addSquirrel(squirrel);
 
       // Add feeding with higher starting weight
@@ -391,7 +358,7 @@ void main() {
       final weightChange = await weightRepo.getWeightChange(
         squirrel.id,
         dateWithTime(-2, 0, 0), // Start of first day
-        dateWithTime(7, 23, 59, 59), // End of day to include the 10 AM feeding
+        endOfDay(7), // End of day to include the 10 AM feeding
       );
 
       // Change from 60.0 to 52.0 = -8.0

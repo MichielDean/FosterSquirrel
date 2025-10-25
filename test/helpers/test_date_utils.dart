@@ -15,10 +15,13 @@ DateTime daysAgo(int days) => testBaseDate.subtract(Duration(days: days));
 DateTime daysFromNow(int days) => testBaseDate.add(Duration(days: days));
 
 /// Get a specific time on a relative date
-DateTime dateWithTime(int daysOffset, int hour, [int minute = 0, int second = 0]) {
-  final date = daysOffset < 0 
-      ? daysAgo(-daysOffset) 
-      : daysFromNow(daysOffset);
+DateTime dateWithTime(
+  int daysOffset,
+  int hour, [
+  int minute = 0,
+  int second = 0,
+]) {
+  final date = daysOffset < 0 ? daysAgo(-daysOffset) : daysFromNow(daysOffset);
   return DateTime(date.year, date.month, date.day, hour, minute, second);
 }
 
@@ -40,6 +43,15 @@ DateTime get yesterday => daysAgo(1);
 /// Get midnight tomorrow
 DateTime get tomorrow => daysFromNow(1);
 
+/// Get the end of day (23:59:59.999) for a given date offset
+DateTime endOfDay(int daysOffset) {
+  final date = daysOffset < 0 ? daysAgo(-daysOffset) : daysFromNow(daysOffset);
+  return DateTime(date.year, date.month, date.day, 23, 59, 59, 999);
+}
+
+/// Get the end of today (23:59:59.999)
+DateTime get endOfToday => endOfDay(0);
+
 /// Get a date N hours ago
 DateTime hoursAgo(int hours) => testBaseDate.subtract(Duration(hours: hours));
 
@@ -47,7 +59,9 @@ DateTime hoursAgo(int hours) => testBaseDate.subtract(Duration(hours: hours));
 DateTime hoursFromNow(int hours) => testBaseDate.add(Duration(hours: hours));
 
 /// Get a date N minutes ago
-DateTime minutesAgo(int minutes) => testBaseDate.subtract(Duration(minutes: minutes));
+DateTime minutesAgo(int minutes) =>
+    testBaseDate.subtract(Duration(minutes: minutes));
 
 /// Get a date N minutes from now
-DateTime minutesFromNow(int minutes) => testBaseDate.add(Duration(minutes: minutes));
+DateTime minutesFromNow(int minutes) =>
+    testBaseDate.add(Duration(minutes: minutes));

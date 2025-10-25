@@ -66,8 +66,11 @@ class FeedingRecord {
   DateTime get updatedAt => _updatedAt ?? DateTime.now();
 
   /// Weight difference for this feeding (ending - starting)
-  double get weightDifferenceGrams =>
-      (endingWeightGrams ?? 0.0) - startingWeightGrams;
+  /// Returns null if ending weight is not recorded
+  double? get weightDifferenceGrams {
+    if (endingWeightGrams == null) return null;
+    return endingWeightGrams! - startingWeightGrams;
+  }
 
   /// Calculate weight gain from a baseline weight (e.g., admission weight or previous feeding)
   /// Returns null if ending weight is not recorded
@@ -110,13 +113,17 @@ class FeedingRecord {
   }
 
   /// Get ending weight in specified unit
-  double getEndingWeight(WeightUnit unit) {
-    return WeightConverter.fromGrams(endingWeightGrams ?? 0.0, unit);
+  /// Returns null if ending weight is not recorded
+  double? getEndingWeight(WeightUnit unit) {
+    if (endingWeightGrams == null) return null;
+    return WeightConverter.fromGrams(endingWeightGrams!, unit);
   }
 
   /// Get weight difference in specified unit
-  double getWeightDifference(WeightUnit unit) {
-    return WeightConverter.fromGrams(weightDifferenceGrams, unit);
+  /// Returns null if ending weight is not recorded
+  double? getWeightDifference(WeightUnit unit) {
+    if (weightDifferenceGrams == null) return null;
+    return WeightConverter.fromGrams(weightDifferenceGrams!, unit);
   }
 
   /// Format starting weight for display
@@ -125,13 +132,17 @@ class FeedingRecord {
   }
 
   /// Format ending weight for display
+  /// Returns 'N/A' if ending weight is not recorded
   String formatEndingWeight(WeightUnit unit) {
-    return WeightConverter.formatWeight(endingWeightGrams ?? 0.0, unit);
+    if (endingWeightGrams == null) return 'N/A';
+    return WeightConverter.formatWeight(endingWeightGrams!, unit);
   }
 
   /// Format weight difference for display with +/- sign
+  /// Returns 'N/A' if ending weight is not recorded
   String formatWeightDifference(WeightUnit unit) {
-    return WeightConverter.formatWeightDifference(weightDifferenceGrams, unit);
+    if (weightDifferenceGrams == null) return 'N/A';
+    return WeightConverter.formatWeightDifference(weightDifferenceGrams!, unit);
   }
 
   /// Format feeding amount for display (ML or CC)
@@ -140,7 +151,11 @@ class FeedingRecord {
   }
 
   /// Check if this was a successful feeding (weight gain or maintained)
-  bool get isSuccessfulFeeding => weightDifferenceGrams >= 0;
+  /// Returns true if ending weight is not recorded (benefit of the doubt)
+  bool get isSuccessfulFeeding {
+    if (weightDifferenceGrams == null) return true;
+    return weightDifferenceGrams! >= 0;
+  }
 
   /// Get feeding time formatted for display
   String get formattedFeedingTime {
@@ -338,9 +353,14 @@ class FeedingStats {
     final sortedRecords = List<FeedingRecord>.from(records)
       ..sort((a, b) => a.feedingTime.compareTo(b.feedingTime));
 
-    final totalWeightGain = records.fold<double>(
+    // Only include records with recorded ending weight in weight gain calculations
+    final recordsWithEndingWeight = records
+        .where((r) => r.endingWeightGrams != null)
+        .toList();
+
+    final totalWeightGain = recordsWithEndingWeight.fold<double>(
       0.0,
-      (sum, record) => sum + record.weightDifferenceGrams,
+      (sum, record) => sum + record.weightDifferenceGrams!,
     );
 
     final successfulCount = records.where((r) => r.isSuccessfulFeeding).length;
@@ -350,10 +370,15 @@ class FeedingStats {
       (sum, record) => sum + record.feedAmountML,
     );
 
+    // Calculate average only from records with ending weight
+    final averageWeightGain = recordsWithEndingWeight.isEmpty
+        ? 0.0
+        : totalWeightGain / recordsWithEndingWeight.length;
+
     return FeedingStats._(
       totalFeedings: records.length,
       totalWeightGainGrams: totalWeightGain,
-      averageWeightGainGrams: totalWeightGain / records.length,
+      averageWeightGainGrams: averageWeightGain,
       successfulFeedings: successfulCount,
       totalFeedAmountML: totalFeedAmount,
       firstFeedingTime: sortedRecords.first.feedingTime,

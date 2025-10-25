@@ -22,7 +22,7 @@ void main() {
     );
 
     test(
-      'should return 0 weight difference when ending weight is not recorded',
+      'should return null weight difference when ending weight is not recorded',
       () {
         final record = FeedingRecord(
           id: 'test-2',
@@ -32,7 +32,7 @@ void main() {
           startingWeightGrams: 100.0,
         );
 
-        expect(record.weightDifferenceGrams, equals(-100.0)); // 0 - 100
+        expect(record.weightDifferenceGrams, isNull);
       },
     );
 
@@ -249,6 +249,76 @@ void main() {
       );
 
       expect(record.isSuccessfulFeeding, isFalse);
+    });
+
+    test('should be considered successful when ending weight not recorded', () {
+      final record = FeedingRecord(
+        id: 'test-17a',
+        squirrelId: 'squirrel-1',
+        squirrelName: 'Testy',
+        feedingTime: DateTime.now(),
+        startingWeightGrams: 100.0,
+      );
+
+      // Benefit of the doubt when ending weight not recorded
+      expect(record.isSuccessfulFeeding, isTrue);
+    });
+  });
+
+  group('FeedingRecord - Null Ending Weight Handling', () {
+    test('should return null for getEndingWeight when not recorded', () {
+      final record = FeedingRecord(
+        id: 'test-null-1',
+        squirrelId: 'squirrel-1',
+        squirrelName: 'Testy',
+        feedingTime: DateTime.now(),
+        startingWeightGrams: 100.0,
+      );
+
+      expect(record.getEndingWeight(WeightUnit.grams), isNull);
+      expect(record.getEndingWeight(WeightUnit.ounces), isNull);
+    });
+
+    test(
+      'should return null for getWeightDifference when ending not recorded',
+      () {
+        final record = FeedingRecord(
+          id: 'test-null-2',
+          squirrelId: 'squirrel-1',
+          squirrelName: 'Testy',
+          feedingTime: DateTime.now(),
+          startingWeightGrams: 100.0,
+        );
+
+        expect(record.getWeightDifference(WeightUnit.grams), isNull);
+        expect(record.getWeightDifference(WeightUnit.ounces), isNull);
+      },
+    );
+
+    test('should format ending weight as N/A when not recorded', () {
+      final record = FeedingRecord(
+        id: 'test-null-3',
+        squirrelId: 'squirrel-1',
+        squirrelName: 'Testy',
+        feedingTime: DateTime.now(),
+        startingWeightGrams: 100.0,
+      );
+
+      expect(record.formatEndingWeight(WeightUnit.grams), equals('N/A'));
+      expect(record.formatEndingWeight(WeightUnit.ounces), equals('N/A'));
+    });
+
+    test('should format weight difference as N/A when ending not recorded', () {
+      final record = FeedingRecord(
+        id: 'test-null-4',
+        squirrelId: 'squirrel-1',
+        squirrelName: 'Testy',
+        feedingTime: DateTime.now(),
+        startingWeightGrams: 100.0,
+      );
+
+      expect(record.formatWeightDifference(WeightUnit.grams), equals('N/A'));
+      expect(record.formatWeightDifference(WeightUnit.ounces), equals('N/A'));
     });
   });
 
@@ -604,6 +674,80 @@ void main() {
 
       expect(stats.firstFeedingTime, equals(firstTime));
       expect(stats.lastFeedingTime, equals(lastTime));
+    });
+
+    test(
+      'should exclude records without ending weight from weight gain calculations',
+      () {
+        final records = [
+          FeedingRecord(
+            id: '1',
+            squirrelId: 'sq-1',
+            squirrelName: 'Test',
+            feedingTime: DateTime.now(),
+            startingWeightGrams: 100.0,
+            endingWeightGrams: 105.0, // +5g
+          ),
+          FeedingRecord(
+            id: '2',
+            squirrelId: 'sq-1',
+            squirrelName: 'Test',
+            feedingTime: DateTime.now(),
+            startingWeightGrams: 105.0,
+            // No ending weight - should be excluded from calculations
+          ),
+          FeedingRecord(
+            id: '3',
+            squirrelId: 'sq-1',
+            squirrelName: 'Test',
+            feedingTime: DateTime.now(),
+            startingWeightGrams: 105.0,
+            endingWeightGrams: 108.0, // +3g
+          ),
+        ];
+
+        final stats = FeedingStats.fromRecords(records);
+
+        // Total feedings includes all records
+        expect(stats.totalFeedings, equals(3));
+
+        // Weight gain should only include records with ending weight (5 + 3 = 8)
+        expect(stats.totalWeightGainGrams, equals(8.0));
+
+        // Average should be calculated from only 2 records with ending weight
+        expect(stats.averageWeightGainGrams, equals(4.0));
+
+        // Successful feedings includes the one without ending weight (benefit of doubt)
+        expect(stats.successfulFeedings, equals(3));
+      },
+    );
+
+    test('should handle all records without ending weight correctly', () {
+      final records = [
+        FeedingRecord(
+          id: '1',
+          squirrelId: 'sq-1',
+          squirrelName: 'Test',
+          feedingTime: DateTime.now(),
+          startingWeightGrams: 100.0,
+        ),
+        FeedingRecord(
+          id: '2',
+          squirrelId: 'sq-1',
+          squirrelName: 'Test',
+          feedingTime: DateTime.now(),
+          startingWeightGrams: 105.0,
+        ),
+      ];
+
+      final stats = FeedingStats.fromRecords(records);
+
+      expect(stats.totalFeedings, equals(2));
+      expect(stats.totalWeightGainGrams, equals(0.0));
+      expect(stats.averageWeightGainGrams, equals(0.0));
+      // All considered successful (benefit of the doubt)
+      expect(stats.successfulFeedings, equals(2));
+      expect(stats.successRate, equals(100.0));
     });
   });
 }
