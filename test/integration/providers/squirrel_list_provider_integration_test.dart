@@ -137,10 +137,7 @@ void main() {
         notifyCount++;
       });
 
-      final squirrel = Squirrel.create(
-        name: 'Test',
-        foundDate: daysAgo(2),
-      );
+      final squirrel = Squirrel.create(name: 'Test', foundDate: daysAgo(2));
 
       // Act
       await provider.addSquirrel(squirrel);
@@ -204,10 +201,7 @@ void main() {
 
     test('should update squirrel status correctly', () async {
       // Arrange
-      final squirrel = Squirrel.create(
-        name: 'Test',
-        foundDate: daysAgo(2),
-      );
+      final squirrel = Squirrel.create(name: 'Test', foundDate: daysAgo(2));
       await provider.addSquirrel(squirrel);
 
       // Act - Change status to released
@@ -228,10 +222,7 @@ void main() {
 
     test('should notify listeners when squirrel is updated', () async {
       // Arrange
-      final squirrel = Squirrel.create(
-        name: 'Test',
-        foundDate: daysAgo(2),
-      );
+      final squirrel = Squirrel.create(name: 'Test', foundDate: daysAgo(2));
       await provider.addSquirrel(squirrel);
 
       int notifyCount = 0;
@@ -251,10 +242,7 @@ void main() {
   group('SquirrelListProvider Integration - Delete Squirrel', () {
     test('should delete squirrel and remove from database', () async {
       // Arrange
-      final squirrel = Squirrel.create(
-        name: 'ToDelete',
-        foundDate: daysAgo(2),
-      );
+      final squirrel = Squirrel.create(name: 'ToDelete', foundDate: daysAgo(2));
       await provider.addSquirrel(squirrel);
       expect(provider.squirrels, hasLength(1));
 
@@ -271,14 +259,8 @@ void main() {
 
     test('should delete correct squirrel when multiple exist', () async {
       // Arrange
-      final squirrel1 = Squirrel.create(
-        name: 'Keep',
-        foundDate: daysAgo(2),
-      );
-      final squirrel2 = Squirrel.create(
-        name: 'Delete',
-        foundDate: daysAgo(1),
-      );
+      final squirrel1 = Squirrel.create(name: 'Keep', foundDate: daysAgo(2));
+      final squirrel2 = Squirrel.create(name: 'Delete', foundDate: daysAgo(1));
 
       await provider.addSquirrel(squirrel1);
       await provider.addSquirrel(squirrel2);
@@ -298,10 +280,7 @@ void main() {
 
     test('should notify listeners when squirrel is deleted', () async {
       // Arrange
-      final squirrel = Squirrel.create(
-        name: 'Test',
-        foundDate: daysAgo(2),
-      );
+      final squirrel = Squirrel.create(name: 'Test', foundDate: daysAgo(2));
       await provider.addSquirrel(squirrel);
 
       int notifyCount = 0;
@@ -323,16 +302,10 @@ void main() {
   group('SquirrelListProvider Integration - Data Consistency', () {
     test('should maintain consistency across multiple operations', () async {
       // Arrange & Act - Complex sequence of operations
-      final squirrel1 = Squirrel.create(
-        name: 'First',
-        foundDate: daysAgo(2),
-      );
+      final squirrel1 = Squirrel.create(name: 'First', foundDate: daysAgo(2));
       await provider.addSquirrel(squirrel1);
 
-      final squirrel2 = Squirrel.create(
-        name: 'Second',
-        foundDate: daysAgo(1),
-      );
+      final squirrel2 = Squirrel.create(name: 'Second', foundDate: daysAgo(1));
       await provider.addSquirrel(squirrel2);
 
       final updated = squirrel1.copyWith(name: 'FirstUpdated');

@@ -393,7 +393,10 @@ void main() {
       expect(squirrel.id, equals('json-test-id'));
       expect(squirrel.name, equals('JSON Test'));
       // Deserialize date correctly from the JSON
-      expect(squirrel.foundDate, equals(DateTime.parse('2025-01-01T00:00:00.000')));
+      expect(
+        squirrel.foundDate,
+        equals(DateTime.parse('2025-01-01T00:00:00.000')),
+      );
       expect(squirrel.admissionWeight, equals(50.0));
       expect(squirrel.currentWeight, equals(75.0));
       expect(squirrel.status, equals(SquirrelStatus.active));

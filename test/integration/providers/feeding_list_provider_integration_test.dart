@@ -109,27 +109,19 @@ void main() {
 
     test('should precompute baseline weights correctly', () async {
       // Arrange
-      final feeding1 =
-          FeedingRecord.create(
-            squirrelId: testSquirrel.id,
-            squirrelName: testSquirrel.name,
-            startingWeightGrams: 50.0,
-            actualFeedAmountML: 5.0,
-          ).copyWith(
-            feedingTime: dateWithTime(-2, 8, 0),
-            endingWeightGrams: 52.0,
-          );
+      final feeding1 = FeedingRecord.create(
+        squirrelId: testSquirrel.id,
+        squirrelName: testSquirrel.name,
+        startingWeightGrams: 50.0,
+        actualFeedAmountML: 5.0,
+      ).copyWith(feedingTime: dateWithTime(-2, 8, 0), endingWeightGrams: 52.0);
 
-      final feeding2 =
-          FeedingRecord.create(
-            squirrelId: testSquirrel.id,
-            squirrelName: testSquirrel.name,
-            startingWeightGrams: 52.0,
-            actualFeedAmountML: 5.0,
-          ).copyWith(
-            feedingTime: dateWithTime(-2, 11, 0),
-            endingWeightGrams: 54.0,
-          );
+      final feeding2 = FeedingRecord.create(
+        squirrelId: testSquirrel.id,
+        squirrelName: testSquirrel.name,
+        startingWeightGrams: 52.0,
+        actualFeedAmountML: 5.0,
+      ).copyWith(feedingTime: dateWithTime(-2, 11, 0), endingWeightGrams: 54.0);
 
       await feedingRepo.addFeedingRecord(feeding1);
       await feedingRepo.addFeedingRecord(feeding2);
@@ -201,16 +193,12 @@ void main() {
 
     test('should recompute caches after adding record', () async {
       // Arrange - Add first feeding
-      final feeding1 =
-          FeedingRecord.create(
-            squirrelId: testSquirrel.id,
-            squirrelName: testSquirrel.name,
-            startingWeightGrams: 50.0,
-            actualFeedAmountML: 5.0,
-          ).copyWith(
-            feedingTime: dateWithTime(-2, 8, 0),
-            endingWeightGrams: 52.0,
-          );
+      final feeding1 = FeedingRecord.create(
+        squirrelId: testSquirrel.id,
+        squirrelName: testSquirrel.name,
+        startingWeightGrams: 50.0,
+        actualFeedAmountML: 5.0,
+      ).copyWith(feedingTime: dateWithTime(-2, 8, 0), endingWeightGrams: 52.0);
       await provider.addFeedingRecord(feeding1);
 
       // Act - Add second feeding
@@ -282,16 +270,12 @@ void main() {
 
     test('should recompute caches after update', () async {
       // Arrange - Add two feedings
-      final feeding1 =
-          FeedingRecord.create(
-            squirrelId: testSquirrel.id,
-            squirrelName: testSquirrel.name,
-            startingWeightGrams: 50.0,
-            actualFeedAmountML: 5.0,
-          ).copyWith(
-            feedingTime: dateWithTime(-2, 8, 0),
-            endingWeightGrams: 52.0,
-          );
+      final feeding1 = FeedingRecord.create(
+        squirrelId: testSquirrel.id,
+        squirrelName: testSquirrel.name,
+        startingWeightGrams: 50.0,
+        actualFeedAmountML: 5.0,
+      ).copyWith(feedingTime: dateWithTime(-2, 8, 0), endingWeightGrams: 52.0);
 
       final feeding2 = FeedingRecord.create(
         squirrelId: testSquirrel.id,
@@ -363,27 +347,19 @@ void main() {
 
     test('should recompute caches after deletion', () async {
       // Arrange - Add three feedings
-      final feeding1 =
-          FeedingRecord.create(
-            squirrelId: testSquirrel.id,
-            squirrelName: testSquirrel.name,
-            startingWeightGrams: 50.0,
-            actualFeedAmountML: 5.0,
-          ).copyWith(
-            feedingTime: dateWithTime(-2, 8, 0),
-            endingWeightGrams: 52.0,
-          );
+      final feeding1 = FeedingRecord.create(
+        squirrelId: testSquirrel.id,
+        squirrelName: testSquirrel.name,
+        startingWeightGrams: 50.0,
+        actualFeedAmountML: 5.0,
+      ).copyWith(feedingTime: dateWithTime(-2, 8, 0), endingWeightGrams: 52.0);
 
-      final feeding2 =
-          FeedingRecord.create(
-            squirrelId: testSquirrel.id,
-            squirrelName: testSquirrel.name,
-            startingWeightGrams: 52.0,
-            actualFeedAmountML: 5.0,
-          ).copyWith(
-            feedingTime: dateWithTime(-2, 11, 0),
-            endingWeightGrams: 54.0,
-          );
+      final feeding2 = FeedingRecord.create(
+        squirrelId: testSquirrel.id,
+        squirrelName: testSquirrel.name,
+        startingWeightGrams: 52.0,
+        actualFeedAmountML: 5.0,
+      ).copyWith(feedingTime: dateWithTime(-2, 11, 0), endingWeightGrams: 54.0);
 
       final feeding3 = FeedingRecord.create(
         squirrelId: testSquirrel.id,
@@ -434,16 +410,12 @@ void main() {
   group('FeedingListProvider Integration - Data Consistency', () {
     test('should maintain consistency across multiple operations', () async {
       // Arrange & Act - Complex sequence of operations
-      final feeding1 =
-          FeedingRecord.create(
-            squirrelId: testSquirrel.id,
-            squirrelName: testSquirrel.name,
-            startingWeightGrams: 50.0,
-            actualFeedAmountML: 5.0,
-          ).copyWith(
-            feedingTime: dateWithTime(-2, 8, 0),
-            endingWeightGrams: 52.0,
-          );
+      final feeding1 = FeedingRecord.create(
+        squirrelId: testSquirrel.id,
+        squirrelName: testSquirrel.name,
+        startingWeightGrams: 50.0,
+        actualFeedAmountML: 5.0,
+      ).copyWith(feedingTime: dateWithTime(-2, 8, 0), endingWeightGrams: 52.0);
       await provider.addFeedingRecord(feeding1);
 
       final feeding2 = FeedingRecord.create(

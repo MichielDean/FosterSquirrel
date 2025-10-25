@@ -81,15 +81,9 @@ void main() {
     });
 
     test('should add multiple squirrels independently', () async {
-      final squirrel1 = Squirrel.create(
-        name: 'Nutkin',
-        foundDate: daysAgo(2),
-      );
+      final squirrel1 = Squirrel.create(name: 'Nutkin', foundDate: daysAgo(2));
 
-      final squirrel2 = Squirrel.create(
-        name: 'Fluffy',
-        foundDate: daysAgo(1),
-      );
+      final squirrel2 = Squirrel.create(name: 'Fluffy', foundDate: daysAgo(1));
 
       await repository.addSquirrel(squirrel1);
       await repository.addSquirrel(squirrel2);
@@ -187,10 +181,7 @@ void main() {
 
   group('SquirrelRepository - Delete', () {
     test('should delete squirrel successfully', () async {
-      final squirrel = Squirrel.create(
-        name: 'ToDelete',
-        foundDate: daysAgo(2),
-      );
+      final squirrel = Squirrel.create(name: 'ToDelete', foundDate: daysAgo(2));
 
       await repository.addSquirrel(squirrel);
       expect(await repository.getSquirrel(squirrel.id), isNotNull);
@@ -252,20 +243,11 @@ void main() {
     });
 
     test('should get only active squirrels', () async {
-      final active1 = Squirrel.create(
-        name: 'Active1',
-        foundDate: daysAgo(2),
-      );
+      final active1 = Squirrel.create(name: 'Active1', foundDate: daysAgo(2));
 
-      final active2 = Squirrel.create(
-        name: 'Active2',
-        foundDate: daysAgo(1),
-      );
+      final active2 = Squirrel.create(name: 'Active2', foundDate: daysAgo(1));
 
-      final released = Squirrel.create(
-        name: 'Released',
-        foundDate: today,
-      );
+      final released = Squirrel.create(name: 'Released', foundDate: today);
 
       await repository.addSquirrel(active1);
       await repository.addSquirrel(active2);
@@ -290,18 +272,9 @@ void main() {
     });
 
     test('should get squirrels by status', () async {
-      final active = Squirrel.create(
-        name: 'Active',
-        foundDate: daysAgo(2),
-      );
-      final released = Squirrel.create(
-        name: 'Released',
-        foundDate: daysAgo(1),
-      );
-      final deceased = Squirrel.create(
-        name: 'Deceased',
-        foundDate: today,
-      );
+      final active = Squirrel.create(name: 'Active', foundDate: daysAgo(2));
+      final released = Squirrel.create(name: 'Released', foundDate: daysAgo(1));
+      final deceased = Squirrel.create(name: 'Deceased', foundDate: today);
 
       await repository.addSquirrel(active);
       await repository.addSquirrel(released);
@@ -332,10 +305,7 @@ void main() {
 
       for (int i = 0; i < 5; i++) {
         await repository.addSquirrel(
-          Squirrel.create(
-            name: 'Squirrel$i',
-            foundDate: daysAgo(2 - i),
-          ),
+          Squirrel.create(name: 'Squirrel$i', foundDate: daysAgo(2 - i)),
         );
       }
 

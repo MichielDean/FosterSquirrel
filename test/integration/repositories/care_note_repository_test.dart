@@ -29,10 +29,7 @@ void main() {
   group('CareNoteRepository - Add Care Note', () {
     test('should add care note successfully', () async {
       // Add squirrel first
-      final squirrel = Squirrel.create(
-        name: 'Nutkin',
-        foundDate: daysAgo(2),
-      );
+      final squirrel = Squirrel.create(name: 'Nutkin', foundDate: daysAgo(2));
       await squirrelRepo.addSquirrel(squirrel);
 
       // Add care note
@@ -53,10 +50,7 @@ void main() {
     });
 
     test('should persist all care note fields correctly', () async {
-      final squirrel = Squirrel.create(
-        name: 'Test',
-        foundDate: daysAgo(2),
-      );
+      final squirrel = Squirrel.create(name: 'Test', foundDate: daysAgo(2));
       await squirrelRepo.addSquirrel(squirrel);
 
       final createdAt = dateWithTime(12, 10, 30);
@@ -97,10 +91,7 @@ void main() {
 
   group('CareNoteRepository - Query Care Notes', () {
     test('should get all care notes for squirrel ordered by date', () async {
-      final squirrel = Squirrel.create(
-        name: 'Test',
-        foundDate: daysAgo(2),
-      );
+      final squirrel = Squirrel.create(name: 'Test', foundDate: daysAgo(2));
       await squirrelRepo.addSquirrel(squirrel);
 
       // Add multiple notes
@@ -132,10 +123,7 @@ void main() {
     });
 
     test('should return empty list when squirrel has no notes', () async {
-      final squirrel = Squirrel.create(
-        name: 'Test',
-        foundDate: daysAgo(2),
-      );
+      final squirrel = Squirrel.create(name: 'Test', foundDate: daysAgo(2));
       await squirrelRepo.addSquirrel(squirrel);
 
       final notes = await careNoteRepo.getCareNotes(squirrel.id);
@@ -144,10 +132,7 @@ void main() {
     });
 
     test('should get care notes filtered by type', () async {
-      final squirrel = Squirrel.create(
-        name: 'Test',
-        foundDate: daysAgo(2),
-      );
+      final squirrel = Squirrel.create(name: 'Test', foundDate: daysAgo(2));
       await squirrelRepo.addSquirrel(squirrel);
 
       // Add notes of different types
@@ -184,10 +169,7 @@ void main() {
     });
 
     test('should get only important care notes', () async {
-      final squirrel = Squirrel.create(
-        name: 'Test',
-        foundDate: daysAgo(2),
-      );
+      final squirrel = Squirrel.create(name: 'Test', foundDate: daysAgo(2));
       await squirrelRepo.addSquirrel(squirrel);
 
       // Add important and regular notes
@@ -260,10 +242,7 @@ void main() {
     });
 
     test('should respect limit when getting recent notes', () async {
-      final squirrel = Squirrel.create(
-        name: 'Test',
-        foundDate: daysAgo(2),
-      );
+      final squirrel = Squirrel.create(name: 'Test', foundDate: daysAgo(2));
       await squirrelRepo.addSquirrel(squirrel);
 
       // Add 5 notes
@@ -286,10 +265,7 @@ void main() {
 
   group('CareNoteRepository - Date Range Queries', () {
     test('should get care notes within date range', () async {
-      final squirrel = Squirrel.create(
-        name: 'Test',
-        foundDate: daysAgo(2),
-      );
+      final squirrel = Squirrel.create(name: 'Test', foundDate: daysAgo(2));
       await squirrelRepo.addSquirrel(squirrel);
 
       // Add notes on different days
@@ -333,10 +309,7 @@ void main() {
     });
 
     test('should return empty list when no notes in range', () async {
-      final squirrel = Squirrel.create(
-        name: 'Test',
-        foundDate: daysAgo(2),
-      );
+      final squirrel = Squirrel.create(name: 'Test', foundDate: daysAgo(2));
       await squirrelRepo.addSquirrel(squirrel);
 
       final note = CareNote(
@@ -362,10 +335,7 @@ void main() {
 
   group('CareNoteRepository - Search', () {
     test('should search care notes by content', () async {
-      final squirrel = Squirrel.create(
-        name: 'Test',
-        foundDate: daysAgo(2),
-      );
+      final squirrel = Squirrel.create(name: 'Test', foundDate: daysAgo(2));
       await squirrelRepo.addSquirrel(squirrel);
 
       // Add notes with different content
@@ -442,10 +412,7 @@ void main() {
     });
 
     test('should return empty list when no matches found', () async {
-      final squirrel = Squirrel.create(
-        name: 'Test',
-        foundDate: daysAgo(2),
-      );
+      final squirrel = Squirrel.create(name: 'Test', foundDate: daysAgo(2));
       await squirrelRepo.addSquirrel(squirrel);
 
       final note = CareNote.create(
@@ -467,10 +434,7 @@ void main() {
 
   group('CareNoteRepository - Filter by Photos', () {
     test('should get only care notes with photos', () async {
-      final squirrel = Squirrel.create(
-        name: 'Test',
-        foundDate: daysAgo(2),
-      );
+      final squirrel = Squirrel.create(name: 'Test', foundDate: daysAgo(2));
       await squirrelRepo.addSquirrel(squirrel);
 
       // Add notes with and without photos
@@ -501,10 +465,7 @@ void main() {
 
   group('CareNoteRepository - Analytics', () {
     test('should get care note counts by type', () async {
-      final squirrel = Squirrel.create(
-        name: 'Test',
-        foundDate: daysAgo(2),
-      );
+      final squirrel = Squirrel.create(name: 'Test', foundDate: daysAgo(2));
       await squirrelRepo.addSquirrel(squirrel);
 
       // Add notes of different types
@@ -541,10 +502,7 @@ void main() {
 
   group('CareNoteRepository - Update', () {
     test('should update care note successfully', () async {
-      final squirrel = Squirrel.create(
-        name: 'Test',
-        foundDate: daysAgo(2),
-      );
+      final squirrel = Squirrel.create(name: 'Test', foundDate: daysAgo(2));
       await squirrelRepo.addSquirrel(squirrel);
 
       final original = CareNote.create(
@@ -587,10 +545,7 @@ void main() {
 
   group('CareNoteRepository - Delete', () {
     test('should delete care note successfully', () async {
-      final squirrel = Squirrel.create(
-        name: 'Test',
-        foundDate: daysAgo(2),
-      );
+      final squirrel = Squirrel.create(name: 'Test', foundDate: daysAgo(2));
       await squirrelRepo.addSquirrel(squirrel);
 
       final note = CareNote.create(
@@ -622,10 +577,7 @@ void main() {
     });
 
     test('should delete all care notes for squirrel', () async {
-      final squirrel = Squirrel.create(
-        name: 'Test',
-        foundDate: daysAgo(2),
-      );
+      final squirrel = Squirrel.create(name: 'Test', foundDate: daysAgo(2));
       await squirrelRepo.addSquirrel(squirrel);
 
       // Add multiple notes
@@ -658,10 +610,7 @@ void main() {
 
   group('CareNoteRepository - Reactive Streams', () {
     test('should watch care notes for squirrel', () async {
-      final squirrel = Squirrel.create(
-        name: 'Test',
-        foundDate: daysAgo(2),
-      );
+      final squirrel = Squirrel.create(name: 'Test', foundDate: daysAgo(2));
       await squirrelRepo.addSquirrel(squirrel);
 
       final stream = careNoteRepo.watchCareNotes(squirrel.id);
@@ -691,10 +640,7 @@ void main() {
     });
 
     test('should watch important care notes only', () async {
-      final squirrel = Squirrel.create(
-        name: 'Test',
-        foundDate: daysAgo(2),
-      );
+      final squirrel = Squirrel.create(name: 'Test', foundDate: daysAgo(2));
       await squirrelRepo.addSquirrel(squirrel);
 
       final stream = careNoteRepo.watchImportantCareNotes(squirrel.id);
@@ -737,10 +683,7 @@ void main() {
     });
 
     test('should watch single care note by ID', () async {
-      final squirrel = Squirrel.create(
-        name: 'Test',
-        foundDate: daysAgo(2),
-      );
+      final squirrel = Squirrel.create(name: 'Test', foundDate: daysAgo(2));
       await squirrelRepo.addSquirrel(squirrel);
 
       final note = CareNote.create(

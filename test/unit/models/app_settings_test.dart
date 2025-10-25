@@ -133,7 +133,10 @@ void main() {
       expect(json['weight_loss_alert_threshold'], equals(10.0));
       expect(json['auto_backup_interval_days'], equals(14));
       // Check date is serialized correctly (check format, not exact value)
-      expect(json['last_backup_date'], equals(settings.lastBackupDate.toIso8601String()));
+      expect(
+        json['last_backup_date'],
+        equals(settings.lastBackupDate.toIso8601String()),
+      );
     });
 
     test('should deserialize from JSON with all values', () {
@@ -172,7 +175,10 @@ void main() {
       expect(settings.soundEnabled, isFalse);
       expect(settings.vibrationEnabled, isFalse);
       // Deserialize date correctly from the JSON
-      expect(settings.lastBackupDate, equals(DateTime.parse('2025-01-15T10:30:00.000')));
+      expect(
+        settings.lastBackupDate,
+        equals(DateTime.parse('2025-01-15T10:30:00.000')),
+      );
     });
 
     test('should use defaults when JSON values are missing', () {
