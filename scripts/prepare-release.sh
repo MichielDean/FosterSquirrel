@@ -24,6 +24,12 @@ AAB_DIR="${PROJECT_ROOT}/build/app/outputs/bundle/release"
 APK_FILE="FosterSquirrel-v${VERSION}.apk"
 AAB_FILE="FosterSquirrel-v${VERSION}.aab"
 
+# Verify pubspec.yaml exists
+if [[ ! -f "${PROJECT_ROOT}/pubspec.yaml" ]]; then
+  echo "Error: pubspec.yaml not found at ${PROJECT_ROOT}"
+  exit 1
+fi
+
 # Update pubspec.yaml with new version
 echo "Updating pubspec.yaml..."
 sed -i "s/^version: .*/version: ${VERSION}/" "${PROJECT_ROOT}/pubspec.yaml"
@@ -32,9 +38,21 @@ sed -i "s/^version: .*/version: ${VERSION}/" "${PROJECT_ROOT}/pubspec.yaml"
 echo "Building release APK..."
 flutter build apk --release
 
+# Verify APK was built successfully
+if [[ ! -f "${APK_DIR}/app-release.apk" ]]; then
+  echo "Error: APK build failed - app-release.apk not found"
+  exit 1
+fi
+
 # Build Android App Bundle
 echo "Building release App Bundle..."
 flutter build appbundle --release
+
+# Verify AAB was built successfully
+if [[ ! -f "${AAB_DIR}/app-release.aab" ]]; then
+  echo "Error: App Bundle build failed - app-release.aab not found"
+  exit 1
+fi
 
 # Rename and generate checksums for APK
 echo "Processing APK..."
