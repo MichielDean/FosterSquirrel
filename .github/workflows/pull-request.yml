@@ -13,7 +13,7 @@ jobs:
   ci:
     name: CI - Format, Analyze, Test & Build
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     permissions:
       contents: write
 
