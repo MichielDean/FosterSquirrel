@@ -15,46 +15,55 @@ fi
 
 echo "Preparing release version: $VERSION"
 
-# Calculate build number from semantic version
-# Format: major * 10000 + minor * 100 + patch
-IFS='.' read -ra VERSION_PARTS <<< "$VERSION"
-MAJOR=${VERSION_PARTS[0]}
-MINOR=${VERSION_PARTS[1]}
-PATCH=${VERSION_PARTS[2]}
-BUILD_NUMBER=$((MAJOR * 10000 + MINOR * 100 + PATCH))
+# Store the project root directory reliably
+PROJECT_ROOT=$(cd "$(dirname "$0")/.." && pwd)
 
-echo "Build number: $BUILD_NUMBER"
+# Define output paths
+APK_DIR="${PROJECT_ROOT}/build/app/outputs/flutter-apk"
+AAB_DIR="${PROJECT_ROOT}/build/app/outputs/bundle/release"
+APK_FILE="FosterSquirrel-v${VERSION}.apk"
+AAB_FILE="FosterSquirrel-v${VERSION}.aab"
+
+# Verify pubspec.yaml exists
+if [[ ! -f "${PROJECT_ROOT}/pubspec.yaml" ]]; then
+  echo "Error: pubspec.yaml not found at ${PROJECT_ROOT}"
+  exit 1
+fi
 
 # Update pubspec.yaml with new version
 echo "Updating pubspec.yaml..."
-sed -i "s/^version: .*/version: ${VERSION}+${BUILD_NUMBER}/" pubspec.yaml
+sed -i "s/^version: .*/version: ${VERSION}/" "${PROJECT_ROOT}/pubspec.yaml"
 
 # Build Android APK
 echo "Building release APK..."
 flutter build apk --release
 
+# Verify APK was built successfully
+if [[ ! -f "${APK_DIR}/app-release.apk" ]]; then
+  echo "Error: APK build failed - app-release.apk not found"
+  exit 1
+fi
+
 # Build Android App Bundle
 echo "Building release App Bundle..."
 flutter build appbundle --release
 
-# Rename APK with version
-echo "Renaming APK..."
-mv build/app/outputs/flutter-apk/app-release.apk \
-   build/app/outputs/flutter-apk/FosterSquirrel-v${VERSION}.apk
+# Verify AAB was built successfully
+if [[ ! -f "${AAB_DIR}/app-release.aab" ]]; then
+  echo "Error: App Bundle build failed - app-release.aab not found"
+  exit 1
+fi
 
-# Rename AAB with version
-echo "Renaming App Bundle..."
-mv build/app/outputs/bundle/release/app-release.aab \
-   build/app/outputs/bundle/release/FosterSquirrel-v${VERSION}.aab
+# Rename and generate checksums for APK
+echo "Processing APK..."
+mv "${APK_DIR}/app-release.apk" "${APK_DIR}/${APK_FILE}"
+(cd "${APK_DIR}" && sha256sum "${APK_FILE}" > "${APK_FILE}.sha256")
 
-# Generate SHA256 checksum for APK
-echo "Generating APK checksum..."
-cd build/app/outputs/flutter-apk
-sha256sum FosterSquirrel-v${VERSION}.apk > FosterSquirrel-v${VERSION}.apk.sha256
-
-# Generate SHA256 checksum for AAB
-echo "Generating App Bundle checksum..."
-cd ../../bundle/release
-sha256sum FosterSquirrel-v${VERSION}.aab > FosterSquirrel-v${VERSION}.aab.sha256
+# Rename and generate checksums for AAB
+echo "Processing App Bundle..."
+mv "${AAB_DIR}/app-release.aab" "${AAB_DIR}/${AAB_FILE}"
+(cd "${AAB_DIR}" && sha256sum "${AAB_FILE}" > "${AAB_FILE}.sha256")
 
 echo "✅ Release preparation complete for version $VERSION"
+echo "   APK: ${APK_DIR}/${APK_FILE}"
+echo "   AAB: ${AAB_DIR}/${AAB_FILE}"
