@@ -18,14 +18,9 @@ echo "Preparing release version: $VERSION"
 # Store the project root directory reliably
 PROJECT_ROOT=$(cd "$(dirname "$0")/.." && pwd)
 
-# Use git commit count as build number for monotonically increasing version codes
-BUILD_NUMBER=$(git rev-list --count HEAD)
-
-echo "Build number: $BUILD_NUMBER"
-
 # Update pubspec.yaml with new version
 echo "Updating pubspec.yaml..."
-sed -i "s/^version: .*/version: ${VERSION}+${BUILD_NUMBER}/" pubspec.yaml
+sed -i "s/^version: .*/version: ${VERSION}/" pubspec.yaml
 
 # Build Android APK
 echo "Building release APK..."
