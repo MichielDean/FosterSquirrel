@@ -57,12 +57,12 @@ fi
 # Rename and generate checksums for APK
 echo "Processing APK..."
 mv "${APK_DIR}/app-release.apk" "${APK_DIR}/${APK_FILE}"
-sha256sum "${APK_DIR}/${APK_FILE}" > "${APK_DIR}/${APK_FILE}.sha256"
+(cd "${APK_DIR}" && sha256sum "${APK_FILE}" > "${APK_FILE}.sha256")
 
 # Rename and generate checksums for AAB
 echo "Processing App Bundle..."
 mv "${AAB_DIR}/app-release.aab" "${AAB_DIR}/${AAB_FILE}"
-sha256sum "${AAB_DIR}/${AAB_FILE}" > "${AAB_DIR}/${AAB_FILE}.sha256"
+(cd "${AAB_DIR}" && sha256sum "${AAB_FILE}" > "${AAB_FILE}.sha256")
 
 echo "✅ Release preparation complete for version $VERSION"
 echo "   APK: ${APK_DIR}/${APK_FILE}"
