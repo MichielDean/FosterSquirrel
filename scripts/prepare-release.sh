@@ -18,13 +18,8 @@ echo "Preparing release version: $VERSION"
 # Store the project root directory reliably
 PROJECT_ROOT=$(cd "$(dirname "$0")/.." && pwd)
 
-# Calculate build number from semantic version
-# Format: major * 10000 + minor * 100 + patch
-IFS='.' read -ra VERSION_PARTS <<< "$VERSION"
-MAJOR=${VERSION_PARTS[0]}
-MINOR=${VERSION_PARTS[1]}
-PATCH=${VERSION_PARTS[2]}
-BUILD_NUMBER=$((MAJOR * 10000 + MINOR * 100 + PATCH))
+# Use git commit count as build number for monotonically increasing version codes
+BUILD_NUMBER=$(git rev-list --count HEAD)
 
 echo "Build number: $BUILD_NUMBER"
 
