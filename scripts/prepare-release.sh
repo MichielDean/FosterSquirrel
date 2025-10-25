@@ -18,9 +18,15 @@ echo "Preparing release version: $VERSION"
 # Store the project root directory reliably
 PROJECT_ROOT=$(cd "$(dirname "$0")/.." && pwd)
 
+# Define output paths
+APK_DIR="${PROJECT_ROOT}/build/app/outputs/flutter-apk"
+AAB_DIR="${PROJECT_ROOT}/build/app/outputs/bundle/release"
+APK_FILE="FosterSquirrel-v${VERSION}.apk"
+AAB_FILE="FosterSquirrel-v${VERSION}.aab"
+
 # Update pubspec.yaml with new version
 echo "Updating pubspec.yaml..."
-sed -i "s/^version: .*/version: ${VERSION}/" pubspec.yaml
+sed -i "s/^version: .*/version: ${VERSION}/" "${PROJECT_ROOT}/pubspec.yaml"
 
 # Build Android APK
 echo "Building release APK..."
@@ -30,24 +36,16 @@ flutter build apk --release
 echo "Building release App Bundle..."
 flutter build appbundle --release
 
-# Rename APK with version
-echo "Renaming APK..."
-mv build/app/outputs/flutter-apk/app-release.apk \
-   build/app/outputs/flutter-apk/FosterSquirrel-v${VERSION}.apk
+# Rename and generate checksums for APK
+echo "Processing APK..."
+mv "${APK_DIR}/app-release.apk" "${APK_DIR}/${APK_FILE}"
+sha256sum "${APK_DIR}/${APK_FILE}" > "${APK_DIR}/${APK_FILE}.sha256"
 
-# Rename AAB with version
-echo "Renaming App Bundle..."
-mv build/app/outputs/bundle/release/app-release.aab \
-   build/app/outputs/bundle/release/FosterSquirrel-v${VERSION}.aab
-
-# Generate SHA256 checksum for APK
-echo "Generating APK checksum..."
-cd "${PROJECT_ROOT}/build/app/outputs/flutter-apk"
-sha256sum FosterSquirrel-v${VERSION}.apk > FosterSquirrel-v${VERSION}.apk.sha256
-
-# Generate SHA256 checksum for AAB
-echo "Generating App Bundle checksum..."
-cd "${PROJECT_ROOT}/build/app/outputs/bundle/release"
-sha256sum FosterSquirrel-v${VERSION}.aab > FosterSquirrel-v${VERSION}.aab.sha256
+# Rename and generate checksums for AAB
+echo "Processing App Bundle..."
+mv "${AAB_DIR}/app-release.aab" "${AAB_DIR}/${AAB_FILE}"
+sha256sum "${AAB_DIR}/${AAB_FILE}" > "${AAB_DIR}/${AAB_FILE}.sha256"
 
 echo "✅ Release preparation complete for version $VERSION"
+echo "   APK: ${APK_DIR}/${APK_FILE}"
+echo "   AAB: ${AAB_DIR}/${AAB_FILE}"
