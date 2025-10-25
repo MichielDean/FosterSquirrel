@@ -15,6 +15,9 @@ fi
 
 echo "Preparing release version: $VERSION"
 
+# Store the project root directory
+PROJECT_ROOT=$(pwd)
+
 # Calculate build number from semantic version
 # Format: major * 10000 + minor * 100 + patch
 IFS='.' read -ra VERSION_PARTS <<< "$VERSION"
@@ -49,12 +52,12 @@ mv build/app/outputs/bundle/release/app-release.aab \
 
 # Generate SHA256 checksum for APK
 echo "Generating APK checksum..."
-cd build/app/outputs/flutter-apk
+cd "${PROJECT_ROOT}/build/app/outputs/flutter-apk"
 sha256sum FosterSquirrel-v${VERSION}.apk > FosterSquirrel-v${VERSION}.apk.sha256
 
 # Generate SHA256 checksum for AAB
 echo "Generating App Bundle checksum..."
-cd ../../bundle/release
+cd "${PROJECT_ROOT}/build/app/outputs/bundle/release"
 sha256sum FosterSquirrel-v${VERSION}.aab > FosterSquirrel-v${VERSION}.aab.sha256
 
 echo "✅ Release preparation complete for version $VERSION"
