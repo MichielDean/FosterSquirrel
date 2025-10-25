@@ -61,9 +61,9 @@ jobs:
       - name: Analyze code
         run: flutter analyze --fatal-infos
 
-      # Build (verify production build works BEFORE running tests)
-      - name: Build release APK
-        run: flutter build apk --release
+      # Build (verify app compiles - debug build is much faster than release)
+      - name: Build debug APK
+        run: flutter build apk --debug
 
       # Testing (run last - most comprehensive but slowest)
       - name: Run all tests with coverage
