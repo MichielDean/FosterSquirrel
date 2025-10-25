@@ -5,6 +5,10 @@ on:
     branches: [ main ]
   merge_group:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   ci:
     name: CI - Format, Analyze, Test & Build
