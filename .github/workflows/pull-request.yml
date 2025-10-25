@@ -1,0 +1,82 @@
+name: Pull Request CI
+
+on:
+  pull_request:
+    branches: [ main ]
+  merge_group:
+
+concurrency:
+  group: pr-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    name: CI - Format, Analyze, Test & Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+
+    steps:
+      # Setup
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'gradle'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.4'
+          channel: 'stable'
+          cache: true
+
+      - name: Verify Flutter installation
+        run: flutter doctor -v
+
+      # Dependencies
+      - name: Install dependencies
+        run: flutter pub get
+
+      # Code Generation
+      - name: Generate Drift code
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Generate app icons
+        run: dart run flutter_launcher_icons
+
+      # Code Quality
+      - name: Apply formatting
+        run: dart format lib/ test/
+
+      - name: Commit formatting changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "style: apply dart formatting [skip ci]"
+
+      - name: Analyze code
+        run: flutter analyze --fatal-infos
+
+      # Build (verify app compiles - debug build is much faster than release)
+      - name: Build debug APK
+        run: flutter build apk --debug
+
+      # Testing (run last - most comprehensive but slowest)
+      - name: Run all tests with coverage
+        run: flutter test --coverage --test-randomize-ordering-seed=random
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./coverage/lcov.info
+          flags: pr-tests
+          name: codecov-pr
+        continue-on-error: true
