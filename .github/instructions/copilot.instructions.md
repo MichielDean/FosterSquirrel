@@ -348,7 +348,6 @@ test('SquirrelListProvider.loadSquirrels() should update state', () async {
 
 **Characteristics**:
 - **Moderate Speed**: Execute in hundreds of milliseconds
-- **Partial Integration**: Real database, real repositories, real models
 - **No UI**: Run in Dart VM without Flutter UI framework
 - **Database State**: Use in-memory or test databases
 
@@ -610,3 +609,39 @@ Manual testing alone is insufficient. If a behavior can break, it must have auto
 - When in doubt about whether material is permissible to use, escalate to the project owner or legal counsel before adding it to the repository.
 
 Failure to follow these rules is not permitted; always prioritize respecting creators’ rights and giving proper credit.
+
+## Automated Pull Request Workflow
+
+To create a pull request for code changes, follow this standardized process:
+
+1. **Create a new branch**
+   - Use a descriptive branch name based on the change, e.g. `fix/release-script-paths` or `feature/widget-improvements`.
+   - Example: `git checkout -b fix/release-script-paths main`
+
+2. **Make all relevant changes**
+   - Edit, add, or remove files as required for the feature or fix.
+   - Ensure all changes are tested and meet project standards.
+
+3. **Create a semantic commit**
+   - Use a clear, conventional commit message describing the change and affected scope.
+   - Example: `git commit -m "fix(ci): use absolute paths for release script checksum steps"`
+
+4. **Push the branch to remote**
+   - Example: `git push --set-upstream origin fix/release-script-paths`
+
+5. **Create a pull request using GitHub CLI**
+   - Use the `gh` CLI to open a PR from your branch to `main`.
+   - Example:
+     ```bash
+     gh pr create --base main --head fix/release-script-paths --title "fix(ci): use absolute paths for release script checksum steps" --body "This PR fixes path navigation errors in the release script by using absolute paths for checksum generation, ensuring robust operation in CI environments."
+     ```
+
+6. **Enable auto-merge for the pull request (using gh CLI)**
+   - Example:
+     ```bash
+     gh pr merge --auto --squash
+     ```
+   - This will automatically squash and merge the PR when all required checks pass.
+
+> **Note:** Always ensure your branch is up to date with `main` before creating a PR. Rebase or merge as needed.
+> All changes must be covered by appropriate tests and follow semantic commit conventions.
