@@ -632,7 +632,9 @@ To create a pull request for code changes, follow this standardized process:
 5. **Create a pull request using GitHub CLI**
    - Use the `gh` CLI to open a PR from your branch to `main`.
    - Example:
+     ```bash
      gh pr create --base main --head fix/release-script-paths --title "fix(ci): use absolute paths for release script checksum steps" --body "This PR fixes path navigation errors in the release script by using absolute paths for checksum generation, ensuring robust operation in CI environments."
+     ```
 
 6. **Enable auto-merge for the pull request (using gh CLI)**
    - Example:
