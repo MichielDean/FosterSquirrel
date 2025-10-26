@@ -50,7 +50,14 @@
       }
     ],
     [
-      "@semantic-release/exec",
+      "@semantic-release/git",
+      {
+        "assets": ["CHANGELOG.md", "pubspec.yaml"],
+        "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+      }
+    ],
+    [
+      "@semantic-release/github",
       {
         "verifyConditionsCmd": "flutter --version",
         "prepareCmd": "bash scripts/prepare-release.sh ${nextRelease.version}"
