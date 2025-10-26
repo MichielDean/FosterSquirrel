@@ -636,7 +636,9 @@ To create a pull request for code changes, follow this standardized process:
 
 6. **Enable auto-merge for the pull request (using gh CLI)**
    - Example:
+     ```bash
      gh pr merge --auto --squash
+     ```
    - This will automatically squash and merge the PR when all required checks pass.
 
 > **Note:** Always ensure your branch is up to date with `main` before creating a PR. Rebase or merge as needed.
