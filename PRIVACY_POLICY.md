@@ -107,9 +107,9 @@ However, parents and guardians should supervise children's use of the app as app
 ## Data Security
 
 While we do not collect or transmit your data, we take the security of your local data seriously:
-- All data is stored using industry-standard SQLite database encryption capabilities
+- All data is stored locally on your device in an SQLite database (unencrypted by default)
 - The app follows Flutter and Android security best practices
-- Your data is protected by your device's security features (lock screen, encryption, etc.)
+- Your data is protected by your device's security features (lock screen, device-level encryption, etc.)
 
 **You are responsible for securing your device** using passwords, biometric authentication, and device encryption to protect the data stored by FosterSquirrel.
 
